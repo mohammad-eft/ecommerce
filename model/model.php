@@ -156,7 +156,6 @@ class model extends mainDB{
             }
             if (in_array($this -> type, ['with', 'belongsTo', 'countSubQuery'])) {
                 $this->from();
-                // echo $this -> query;
                 return $this -> connection -> query($this->query);
             }
             echo  $query ."<br>";
