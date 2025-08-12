@@ -147,7 +147,6 @@ class model extends mainDB{
             $query = $this -> query;
             
             if (!empty($this -> where)) {
-                // $this -> from();
                 $query.= " WHERE ".implode(" AND ", $this -> where);
                 echo $query;
             }
