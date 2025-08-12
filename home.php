@@ -1,0 +1,1 @@
+<h1 class="text-center text-5xl font-bold text-gray-700 text-shadow mt-40">This is Home!</h1>
