@@ -148,7 +148,7 @@ class model extends mainDB{
             
             if (!empty($this -> where)) {
                 $query.= " WHERE ".implode(" AND ", $this -> where);
-                echo $query;
+                // echo $query;
             }
             if (isset($this->limit)) {
                 $query .= $this->limit;
@@ -157,9 +157,9 @@ class model extends mainDB{
                 $this->from();
                 return $this -> connection -> query($this->query);
             }
-            echo  $query ."<br>";
+            echo  __METHOD__.$query ."<br>";
             
-            die();
+            // die();
             return $this -> connection -> query($query);
         }
         return $this -> connection -> query($code);
@@ -172,7 +172,7 @@ class model extends mainDB{
             $select = self::select();
             $model -> from();
             self::$model = $select;
-            echo $model -> query,"<br>";
+            // echo $model -> query,"<br>";
         }
         if (!in_array($model -> type, ['select', 'delete', 'update'])) {
             throw new \Exception('ارورون وار عزیز');
@@ -193,6 +193,8 @@ class model extends mainDB{
         $offset = ($num - 1) * 5;
         $this -> from();
         $query = $this -> query.=" LIMIT ".$offset.", 5";
+        // echo "😂😂😂";
+        // echo __METHOD__.$query;
         return $this->connection->query($query);
     }
 

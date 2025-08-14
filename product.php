@@ -46,6 +46,7 @@ if ($uriArr[count($uriArr)-2] == 'page') {
 
     if (!$_POST) {
         $x = product::select()->category(['category_name'=>'name', 'category_id'=>'id'])->pagenate($uriArr[4]);
+        // $x = product::select()->category(['category_name'=>'name', 'category_id'=>'id'])->get();
         while($a = $x->fetch_assoc()){
             echo $a['id'],"+++++",$a['name']," ____ ",$a['price'], " ___ ", $a['category_name'], " ____ ", $a["category_id"];
             ?>
