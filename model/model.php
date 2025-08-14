@@ -4,6 +4,7 @@ class model extends mainDB{
 
     protected $query;
     protected $type;
+    protected $base;
     private static $model = null;
 
     public static function create($data){
@@ -34,6 +35,7 @@ class model extends mainDB{
     }
 
     public static function update($data){
+      
         $table = static::$table;
         foreach($data as $key => $value){
             if ($key != "id") {
@@ -50,6 +52,8 @@ class model extends mainDB{
             }
         }
         $query.=" WHERE id=".$data['id'];
+        //   print_r($query);
+        // die();
         return factory::factory(static::class)->get($query);
     }
 
@@ -68,30 +72,55 @@ class model extends mainDB{
     }
 
     public static function select(array $fields=["*"]){
-        $table = static::$table;
         $model = factory::factory(static::class);
         $model -> query = "SELECT ";
-        $num = 0;
-        foreach($fields as $value){
-            $num++;
-            $model -> query .= $value;
-            if($num<count($fields)){
-                $model->query.=", ";
+        $x = 0;
+        foreach($fields as $table => $datas){
+            $num = 0;
+            if (is_array($datas)) {
+                foreach($datas as $data){
+                    $model->query.=$table.".".$data." ".$table."_".$data." ";
+                    $num++;
+                    // $model -> query .= $value;
+                    if($num<count($datas)){
+                        $model->query.=", ";
+                    }
+                }
+                $x++;
+                if ($x<count($fields)) {
+                    $model->query.=", ";
+                }
+            }
+            if (!is_array($datas)) {
+                $model->query .= $datas;
             }
         }
+        // echo $model->query;
+        // die();
         $model -> type = "select";
         return $model;
     }
 
-    public function with(array $datas){
-        $this->type='with';
+
+    public static function with(string $data){
+        $model = factory::factory(static::class);
         $table = static::$table;
-        foreach($datas as $alias => $fields){
-            foreach($this -> relatedTo as $tablee => $related){
-                  $this -> query.=" ,( ". $fields[0]::select([$fields[1]])->from()->where($table.".".$this->relatedTo[$tablee][0], $tablee.".".$this -> relatedTo[$tablee][1])->getSql(). ") ". $alias;
-            }
+        // die();
+        if (!$model -> type) {
+           $model::select([$table=>['id', 'name', 'price'], $data=>['id', 'name']]);
         }
-        return $this;
+        $model->type='with';
+        $model->join($data);
+        return $model;
+    }
+
+    public function join(string $data){
+        $table = static::$table;
+        $this -> base = " LEFT JOIN $data";
+        foreach($this -> relatedTo as $tableName => $value){
+            $query = $this -> where($table.".".$value[0], $tableName.".".$value[1])->getSql();
+        }
+        return $query;
     }
 
     public function belongsTo(string $table, array $fields){
@@ -107,14 +136,25 @@ class model extends mainDB{
     
     public function getSql(){
         $query = $this -> query;
-        if (!empty($this -> where)) {
-            $query.= " WHERE ".implode(" AND ", $this -> where);
+        if ($this->type != "with") {
+            // echo "😂😂😂";
+            if (!empty($this -> where)) {
+                $query.= " WHERE ".implode(" AND ", $this -> where);
+            }
+            $this->where = [];
+            if (isset($this->limit)) {
+                $query .= $this->limit;
+            }
         }
-        $this->where = [];
-        if (isset($this->limit)) {
-            $query .= $this->limit;
+        if ($this->type == "with") {
+            if (!empty($this -> where)) {
+                $this -> from();
+                $this -> base .= " ON ".implode(" AND ", $this -> where);
+            }
+            $this->query .= $this -> base;
         }
         // echo $this -> query;
+        // echo $this -> base;
         return $query;
     }
     
@@ -145,20 +185,23 @@ class model extends mainDB{
     public function get(?string $code = null){
         if (!$code) {
             $query = $this -> query;
-            
-            if (!empty($this -> where)) {
-                $query.= " WHERE ".implode(" AND ", $this -> where);
-                // echo $query;
+            if ($this->type != "with") {
+                if (!empty($this -> where)) {
+                    $query.= " WHERE ".implode(" AND ", $this -> where);
+                    // echo $query;
+                }
+                if (isset($this->limit)) {
+                    $query .= $this->limit;
+                }
+                if (in_array($this -> type, ['belongsTo', 'countSubQuery'])) {
+                    $this->from();
+                    return $this -> connection -> query($this->query);
+                }
             }
-            if (isset($this->limit)) {
-                $query .= $this->limit;
-            }
-            if (in_array($this -> type, ['with', 'belongsTo', 'countSubQuery'])) {
-                $this->from();
-                return $this -> connection -> query($this->query);
-            }
-            echo  __METHOD__.$query ."<br>";
-            
+            // echo "<br>";
+
+            // echo $query;
+            // echo "<br>";
             // die();
             return $this -> connection -> query($query);
         }
@@ -168,16 +211,18 @@ class model extends mainDB{
     
     public static function where($field, $value, $operator="="){
         $model = factory::factory(static::class);
-        if ($model -> type != "select" && !self::$model) {
-            $select = self::select();
-            $model -> from();
-            self::$model = $select;
-            // echo $model -> query,"<br>";
-        }
-        if (!in_array($model -> type, ['select', 'delete', 'update'])) {
-            throw new \Exception('ارورون وار عزیز');
+        if ($model->type != "with") {
+            if ($model -> type != "select" && !self::$model) {
+                $select = self::select();
+                $model -> from();
+                self::$model = $select;
+            }
+            if (!in_array($model -> type, ['select', 'delete', 'update'])) {
+                throw new \Exception('ارورون وار عزیز');
+            }
         }
         $model -> where []= "$field $operator $value";
+        // print_r($model->where);
         return $model;
     }
 
@@ -190,12 +235,12 @@ class model extends mainDB{
     }
     
     public function pagenate(int $num){
+
         $offset = ($num - 1) * 5;
         $this -> from();
         $query = $this -> query.=" LIMIT ".$offset.", 5";
-        // echo "😂😂😂";
-        // echo __METHOD__.$query;
         return $this->connection->query($query);
+
     }
 
     public function sort(string $sort, string $field){
@@ -222,6 +267,7 @@ class model extends mainDB{
                 }
             }
         }
+
         return $datas;
     }
 }

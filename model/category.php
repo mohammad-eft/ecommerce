@@ -3,6 +3,7 @@
 class category extends model{
     protected static $table = "category";
     protected $relatedTo = ['product'=>['id', 'categoryId']];
+    
     public function withCount(array $fields){
         $this -> countSubQuery(product::class, $fields);
         return $this;

@@ -42,7 +42,7 @@ if ($uriArr[count($uriArr)-2] == 'page') {
     //         // var_dump($data);
     //     }
     // }
-
+/*
 
     if (!$_POST) {
         $x = product::select()->category(['category_name'=>'name', 'category_id'=>'id'])->pagenate($uriArr[4]);
@@ -68,6 +68,25 @@ if ($uriArr[count($uriArr)-2] == 'page') {
         }
             
     }
+*/
+
+    if (!$_POST) {
+        $x = product::with('category')->get();
+        
+        while($a = $x->fetch_assoc()){
+            echo $a['product_id'],"+++++",$a['product_name']," ____ ",$a['product_price'], " ___ ", $a['category_id'], " ____ ", $a["category_name"];
+            ?>
+            <a href="http://localhost/ecommerce/editPro/<?= $a['product_id']; ?>" style="color: green;">edit</a>
+            <a href="http://localhost/ecommerce/deletePro/<?= $a['product_id']; ?>" style="color: red;">delete</a>
+            <a href="http://localhost/ecommerce/showPro/<?= $a['product_id']; ?>" style="color: blue;">show</a>
+            </br>
+            <?php
+        }
+    }
+
+
+
+
 
     
     if ($_POST) {
