@@ -15,7 +15,8 @@
     <div class="flex flex-col">
         <label for="categoryId" class="mr-5 text-md font-semibold text-gray-700">Category : </label>
 
-        <select type="text" name="categoryId" id="categoryId" class="outline-none border-b px-10 py-2 mb-2" required>
+        <select type="text" name="categoryId" id="categoryId" class="outline-none border-b px-10 py-2 mb-2">
+            <option value="0">without category</option>
         <?php 
             $x = category::all();
             while($row = $x->fetch_assoc()){

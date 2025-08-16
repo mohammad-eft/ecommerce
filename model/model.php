@@ -52,8 +52,6 @@ class model extends mainDB{
             }
         }
         $query.=" WHERE id=".$data['id'];
-        //   print_r($query);
-        // die();
         return factory::factory(static::class)->get($query);
     }
 
@@ -81,7 +79,6 @@ class model extends mainDB{
                 foreach($datas as $data){
                     $model->query.=$table.".".$data." ".$table."_".$data." ";
                     $num++;
-                    // $model -> query .= $value;
                     if($num<count($datas)){
                         $model->query.=", ";
                     }
@@ -95,30 +92,52 @@ class model extends mainDB{
                 $model->query .= $datas;
             }
         }
-        // echo $model->query;
-        // die();
         $model -> type = "select";
         return $model;
     }
 
 
     public static function with(string $data){
+        
         $model = factory::factory(static::class);
         $table = static::$table;
-        // die();
-        if (!$model -> type) {
-           $model::select([$table=>['id', 'name', 'price'], $data=>['id', 'name']]);
+        if (static::class == "product") {
+            if (!$model -> type) {
+                $model::select([$table=>['id', 'name', 'price'], $data=>['id', 'name']]);
+            }
+        }
+        if (static::class == "category") {
+            if (!$model -> type) {
+                $model::select([$table=>['id', 'name'], $data=>['id', 'name', 'price']]);
+            }
         }
         $model->type='with';
-        $model->join($data);
+        $model->join($data, true);
         return $model;
     }
-
-    public function join(string $data){
+    
+    public function join(string $data, bool $bool=true){
         $table = static::$table;
-        $this -> base = " LEFT JOIN $data";
-        foreach($this -> relatedTo as $tableName => $value){
-            $query = $this -> where($table.".".$value[0], $tableName.".".$value[1])->getSql();
+        if (static::class == 'product') {
+            if ($bool) {
+                $this -> base = " LEFT JOIN $data";
+                foreach($this -> relatedTo as $tableName => $value){
+                    $query = $this -> where($table.".".$value[0], $tableName.".".$value[1])->getSql();
+                }
+            }
+            if (!$bool) {
+                echo "😂😂😂";
+                $this -> base = " LEFT JOIN $data";
+                foreach($this -> relatedTo as $tableName => $value){
+                    $query = $this -> where($table.".".$value[0], 0)->getSql();
+                }
+            }
+        }
+        if (static::class == 'category') {
+            $this -> base = " INNER JOIN $data";
+            foreach($this -> relatedTo as $tableName => $value){
+                $query = $this -> where($table.".".$value[0], $tableName.".".$value[1])->getSql();
+            }
         }
         return $query;
     }
@@ -137,7 +156,6 @@ class model extends mainDB{
     public function getSql(){
         $query = $this -> query;
         if ($this->type != "with") {
-            // echo "😂😂😂";
             if (!empty($this -> where)) {
                 $query.= " WHERE ".implode(" AND ", $this -> where);
             }
@@ -153,8 +171,6 @@ class model extends mainDB{
             }
             $this->query .= $this -> base;
         }
-        // echo $this -> query;
-        // echo $this -> base;
         return $query;
     }
     
@@ -188,7 +204,6 @@ class model extends mainDB{
             if ($this->type != "with") {
                 if (!empty($this -> where)) {
                     $query.= " WHERE ".implode(" AND ", $this -> where);
-                    // echo $query;
                 }
                 if (isset($this->limit)) {
                     $query .= $this->limit;
@@ -197,12 +212,10 @@ class model extends mainDB{
                     $this->from();
                     return $this -> connection -> query($this->query);
                 }
+                if (!empty($this -> where)) {
+                    $this->query.= " WHERE ".implode(" AND ", $this -> where);
+                }
             }
-            // echo "<br>";
-
-            // echo $query;
-            // echo "<br>";
-            // die();
             return $this -> connection -> query($query);
         }
         return $this -> connection -> query($code);
@@ -222,7 +235,6 @@ class model extends mainDB{
             }
         }
         $model -> where []= "$field $operator $value";
-        // print_r($model->where);
         return $model;
     }
 
@@ -237,7 +249,6 @@ class model extends mainDB{
     public function pagenate(int $num){
 
         $offset = ($num - 1) * 5;
-        $this -> from();
         $query = $this -> query.=" LIMIT ".$offset.", 5";
         return $this->connection->query($query);
 

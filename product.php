@@ -71,7 +71,7 @@ if ($uriArr[count($uriArr)-2] == 'page') {
 */
 
     if (!$_POST) {
-        $x = product::with('category')->get();
+        $x = product::with('category')->pagenate($uriArr[4]);
         
         while($a = $x->fetch_assoc()){
             echo $a['product_id'],"+++++",$a['product_name']," ____ ",$a['product_price'], " ___ ", $a['category_id'], " ____ ", $a["category_name"];
@@ -81,6 +81,15 @@ if ($uriArr[count($uriArr)-2] == 'page') {
             <a href="http://localhost/ecommerce/showPro/<?= $a['product_id']; ?>" style="color: blue;">show</a>
             </br>
             <?php
+        }
+         $num = 1;
+        $all = product::all();
+        $count = $all->num_rows;
+        for ($i=0; $i < $count / 5; $i++) {
+            ?>
+            <a href="http://localhost/ecommerce/product/page/<?= $num; ?>"><?= $num; ?></a>
+            <?php
+            $num++;
         }
     }
 
@@ -114,37 +123,48 @@ if ($uriArr[count($uriArr)-2] == 'page') {
     }
 }
 ?>
-
-<form action="http://localhost/ecommerce/product/page/1" method="post">
-    <div style="margin-top: 10px">
-        <label for="sort">sort:</label>
-        <select min="0" name="sort" id="sort" style="border:1px solid black;">
-            <option value="asc">asc</option>
-            <option value="desc">desc</option>
-        </select>
-    </div>
-    <div style="margin-top: 10px; margin-bottom: 10px;">
-        <label for="field">field:</label>
-        <select name="field" id="field" style="border:1px solid black;">
-            <option value="id">id</option>
-            <option value="price">price</option>
-          ?>
-        </select>
-    <div style="margin-top: 10px; margin-bottom: 10px;">
-        <label for="where_field">where_field:</label>
-        <select name="where_field" id="where_field">
-            <option value="id">id</option>
-            <option value="price">price</option>
-        </select>
-    </div>
-    <div style="margin-top: 10px">
-        <label for="from">from:</label>
-        <input type="number" min="0" name="from" id="from">
-    </div>
-    <div style="margin-top: 10px; margin-bottom: 10px;">
-        <label for="to">to:</label>
-        <input type="number" min="0" name="to" id="to">
-    </div>
-    </div>
-    <button style="martin-top: 30px; border: 1px solid black; padding: 5px;">submit</button>
-</form>
+<div class="w-11/12 mx-auto flex flex-row justify-between">
+    <form action="http://localhost/ecommerce/product/page/1" method="post">
+        <div style="margin-top: 10px">
+            <label for="sort">sort:</label>
+            <select min="0" name="sort" id="sort" style="border:1px solid black;">
+                <option value="asc">asc</option>
+                <option value="desc">desc</option>
+            </select>
+        </div>
+        <div style="margin-top: 10px; margin-bottom: 10px;">
+            <label for="field">field:</label>
+            <select name="field" id="field" style="border:1px solid black;">
+                <option value="id">id</option>
+                <option value="price">price</option>
+              ?>
+            </select>
+        <div style="margin-top: 10px; margin-bottom: 10px;">
+            <label for="where_field">where_field:</label>
+            <select name="where_field" id="where_field">
+                <option value="id">id</option>
+                <option value="price">price</option>
+            </select>
+        </div>
+        <div style="margin-top: 10px">
+            <label for="from">from:</label>
+            <input type="number" min="0" name="from" id="from">
+        </div>
+        <div style="margin-top: 10px; margin-bottom: 10px;">
+            <label for="to">to:</label>
+            <input type="number" min="0" name="to" id="to">
+        </div>
+        </div>
+        <button style="martin-top: 30px; border: 1px solid black; padding: 5px;">submit</button>
+    </form>
+    <form action="http://localhost/ecommerce/innerJoin/page/1" method="post">
+      <div style="margin-top: 10px; margin-bottom: 10px;">
+            <label for="type">type:</label>
+            <select name="type" id="type">
+                <option value="!empty">with category</option>
+                <option value="empty">without category</option>
+            </select>
+        </div>
+        <button style="martin-top: 30px; border: 1px solid black; padding: 5px;">submit</button>
+    </form>
+</div>
