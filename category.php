@@ -18,9 +18,8 @@ while($row=$x->fetch_assoc()){
 }
     */
 
-$x = category::select()->withCount(['product_count'=>'product'])->get();
-
-while($row=$x->fetch_assoc()){
+$rows = category::withCount(['product_count'=>'product'])->get();
+foreach($rows as $row){
     echo $row['id']." ++++ ".$row['name']." ____ ".$row['product_count'];
     ?>
     
@@ -32,3 +31,12 @@ while($row=$x->fetch_assoc()){
 
     <?php
 }
+?>
+
+<form action="http://localhost/ecommerce/catExist/page/1" method="post" class="mt-10 flex flex-row">
+    <select name="category" id="" class="border border-black">
+        <option value="with">with product</option>
+        <option value="without">without product</option>
+    </select>
+    <button class="ml-5">submit</button>
+</form>

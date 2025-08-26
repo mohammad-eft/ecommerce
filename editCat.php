@@ -4,9 +4,7 @@ $uri = $_SERVER['REQUEST_URI'];
 $uriArr = explode('/', $uri);
 $x = category::find($uriArr[count($uriArr)-1]);
 $id=$uriArr[3];
-// echo $uriArr[2];
 $data = $x->fetch_assoc()
-// var_dump($x->fetch_assoc());
 
 ?>
 <h1 class="text-center font-bold text-xl text-gray-700 mt-10">Edit Category Form</h1>

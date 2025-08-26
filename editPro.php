@@ -3,7 +3,6 @@
 $uri = $_SERVER['REQUEST_URI'];
 $uriArr = explode("/", $uri);
 $id = $uriArr[3];
-// $model = factory::factory('product');
 $x = product::find($id);
 $row = $x->fetch_assoc();
 ?>
@@ -28,7 +27,6 @@ $row = $x->fetch_assoc();
 
         <select type="text" name="categoryId" id="categoryId" class="outline-none border-b px-10 py-2 mb-2" required>
         <?php 
-            // $cat = factory::factory('category');
             $x = category::all();
             while($cat = $x->fetch_assoc()){
         ?>

@@ -1,13 +1,16 @@
 <?php
 
-class model extends mainDB{
+class model extends builderFacade{
 
     protected $query;
     protected $type;
     protected $base;
     private static $model = null;
+    protected $group;
+    protected $limit;
+    protected $having;
 
-    public static function create($data){
+    protected function create($data){
         $value="(";
         $field="(";
         $num = 0;
@@ -28,48 +31,52 @@ class model extends mainDB{
         return factory::factory(static::class)->get($query);
     }
 
-    public static function find($id){
+    protected function find($id){
         $table = static::$table;
-        $query = "SELECT * FROM {$table} WHERE id = ".$id;
-        return factory::factory(static::class)->get($query);
+        $model = factory::factory(static::class);
+        self::select()->where("id", $id);
+        return $model->get();
     }
 
-    public static function update($data){
-      
+    protected function update($data){
+        $model=factory::factory(static::class);
+        $model->type="update";
         $table = static::$table;
-        foreach($data as $key => $value){
+        foreach($data[0] as $key => $value){
             if ($key != "id") {
                 $field[]="$key='$value'";
             }
         }
-        $query = "UPDATE {$table} SET ";
+        $model->query = "UPDATE {$table} SET ";
         $num = 0;
         foreach($field as $value){
             $num++;
-            $query.=$value;
+            $model->query.=$value;
             if ($num<count($field)) {
-                $query.=", ";
+                $model->query.=", ";
             }
         }
-        $query.=" WHERE id=".$data['id'];
-        return factory::factory(static::class)->get($query);
+        $model->where('id',$data[0]['id']);
+        return $model->get();
     }
 
-    public static function delete($id){
+    protected function delete($id){
         $table = static::$table;
-        $query = "DELETE FROM {$table} WHERE id=".$id;
-        return factory::factory(static::class)->get($query);
+        $query = $this->query = "DELETE FROM {$table} WHERE id=".$id[0];
+        // echo __METHOD__.$query;
+        return $this->get();
     }
 
-    public static function all(){
-        $table = static::$table;
+    protected function all(){
         $model = factory::factory(static::class);
+        $model -> type="all";
+        $table = static::$table;
         $query = "SELECT * FROM " . $table;
         $model -> query = $query;
         return $model->get($query);
     }
 
-    public static function select(array $fields=["*"]){
+    protected function select(array $fields=["*"]){
         $model = factory::factory(static::class);
         $model -> query = "SELECT ";
         $x = 0;
@@ -97,52 +104,39 @@ class model extends mainDB{
     }
 
 
-    public static function with(string $data){
+    protected function with(array $data){
         
         $model = factory::factory(static::class);
         $table = static::$table;
         if (static::class == "product") {
             if (!$model -> type) {
-                $model::select([$table=>['id', 'name', 'price'], $data=>['id', 'name']]);
+                $model::select([$table=>['id', 'name', 'price'], $data[0]=>['id', 'name']]);
             }
         }
         if (static::class == "category") {
             if (!$model -> type) {
-                $model::select([$table=>['id', 'name'], $data=>['id', 'name', 'price']]);
+                $model::select([$table=>['id', 'name'], $data[0]=>['id', 'name', 'price']]);
             }
         }
-        $model->type='with';
-        $model->join($data, true);
+        $model->join($data[0], $data[1]);
         return $model;
     }
     
-    public function join(string $data, bool $bool=true){
+    protected function join(string $data, string $join){
         $table = static::$table;
-        if (static::class == 'product') {
-            if ($bool) {
-                $this -> base = " LEFT JOIN $data";
-                foreach($this -> relatedTo as $tableName => $value){
-                    $query = $this -> where($table.".".$value[0], $tableName.".".$value[1])->getSql();
-                }
-            }
-            if (!$bool) {
-                echo "😂😂😂";
-                $this -> base = " LEFT JOIN $data";
-                foreach($this -> relatedTo as $tableName => $value){
-                    $query = $this -> where($table.".".$value[0], 0)->getSql();
-                }
-            }
-        }
-        if (static::class == 'category') {
-            $this -> base = " INNER JOIN $data";
-            foreach($this -> relatedTo as $tableName => $value){
-                $query = $this -> where($table.".".$value[0], $tableName.".".$value[1])->getSql();
-            }
+        $this -> base = " {$join} JOIN $data";
+        foreach($this -> relatedTo as $tableName => $value){
+            $query = $this -> where($table.".".$value[0], $tableName.".".$value[1])->getSql();
         }
         return $query;
     }
 
-    public function belongsTo(string $table, array $fields){
+    protected function groupBy(string $field){
+        $this -> group=" GROUP BY {$field}";
+        return $this;
+    }
+
+    protected function belongsTo(string $table, array $fields){
         $this -> type = "belongsTo";
         $this_table = static::$table;
         foreach ($fields as $alias => $field) {
@@ -153,92 +147,96 @@ class model extends mainDB{
         return $this;
     }
     
-    public function getSql(){
-        $query = $this -> query;
-        if ($this->type != "with") {
-            if (!empty($this -> where)) {
-                $query.= " WHERE ".implode(" AND ", $this -> where);
-            }
-            $this->where = [];
-            if (isset($this->limit)) {
-                $query .= $this->limit;
-            }
-        }
-        if ($this->type == "with") {
-            if (!empty($this -> where)) {
-                $this -> from();
-                $this -> base .= " ON ".implode(" AND ", $this -> where);
-            }
-            $this->query .= $this -> base;
-        }
-        return $query;
-    }
-    
-    public function from(){
+    protected function from(){
         $table = static::$table;
-        $this -> query .= " FROM {$table}";
+        $this -> from = " FROM {$table} ";
         return $this;
     }
 
-    public static function count(){
+    protected function count(){
         $model = factory::factory(static::class);
-        $model -> type = 'select';
-        $model -> query .= "SELECT count(*)";
+        self::select(['COUNT(*)']);
         return $model;
     }
 
-    public function countSubQuery(string $table, array $fields){
-        $this -> type = "countSubQuery";
+    protected function countSubQuery(string $table, array $fields){
         $this_table = static::$table;
+        $table=factory::factory($table);
+        $fields=$fields[0];
         foreach ($fields as $alias => $tableName) {
+         
             foreach ($this -> relatedTo as $key => $value) {
-                $this -> query .= " ,( ". $table::count()->from()->where($key.".".$value[1], $this_table.".".$value[0])->getSql() . " ) " . $alias;
+                $this -> subQuery = " ,( ". $table->count()->where($key.".".$value[1], $this_table.".".$value[0])->getSql() . " ) " . $alias;
             }
         }
         return $this;
     }
+
+    protected function having(string $field, int $value, string $operator="="){
+        $this->having=" HAVING {$field} {$operator} {$value}";
+        return $this;
+    }
     
-    public function get(?string $code = null){
-        if (!$code) {
-            $query = $this -> query;
-            if ($this->type != "with") {
-                if (!empty($this -> where)) {
-                    $query.= " WHERE ".implode(" AND ", $this -> where);
-                }
-                if (isset($this->limit)) {
-                    $query .= $this->limit;
-                }
-                if (in_array($this -> type, ['belongsTo', 'countSubQuery'])) {
-                    $this->from();
-                    return $this -> connection -> query($this->query);
-                }
-                if (!empty($this -> where)) {
-                    $this->query.= " WHERE ".implode(" AND ", $this -> where);
+
+     protected function getSql(){
+        $query = $this -> query;
+        if ($this -> type != "all") {
+            if (static::class == "category") {
+                if (isset($this -> subQuery)) {
+                    $query .= $this -> subQuery;
                 }
             }
-            return $this -> connection -> query($query);
+            if ($this->type == "select") {
+                $this -> from();
+                $query .=$this ->from;
+            }
+            if ($this -> base) {
+                $query.=$this->base;
+            }
+            if (!empty($this -> where)) {
+                if (!$this->base) {
+                    $query.=" WHERE ".implode(" AND ", $this->where);
+                }
+                if ($this->base) {
+                    $query.= " ON ".implode(" AND ", $this->where);
+                }
+            }
+            if ($this->group) {
+                $query.=$this->group;
+            }
+            if ($this->having) {
+                $query.=$this->having;
+            }
+            if ($this->limit) {
+                $query.=$this->limit;
+            }
         }
-        return $this -> connection -> query($code);
+        
+        return $query;
+    }
+
+    protected function get(){
+            $query = $this -> getSql();
+            echo $query."<br>";
+            echo $this->type;
+            return $this -> connection -> query($query);
     }
 
     
-    public static function where($field, $value, $operator="="){
+    protected function where($field, $value, $operator="="){
         $model = factory::factory(static::class);
-        if ($model->type != "with") {
-            if ($model -> type != "select" && !self::$model) {
-                $select = self::select();
-                $model -> from();
-                self::$model = $select;
-            }
-            if (!in_array($model -> type, ['select', 'delete', 'update'])) {
-                throw new \Exception('ارورون وار عزیز');
-            }
+        if (!in_array($model -> type, ['select', 'delete', 'update'])) {
+            throw new \Exception('ارورون وار عزیز');
+        }
+        if (is_array($value)) {
+            $model -> where []= "$field $operator $value[0]";
+            return $model;
         }
         $model -> where []= "$field $operator $value";
         return $model;
     }
 
-    public function limit($offset, $numberOfRows){
+    protected function limit($offset, $numberOfRows){
        if (!in_array($this->type, ['select'])) {
             throw new \Exception("LIMIT can only be added to SELECT");
         }
@@ -246,15 +244,14 @@ class model extends mainDB{
         return $this;
     }
     
-    public function pagenate(int $num){
-
-        $offset = ($num - 1) * 5;
-        $query = $this -> query.=" LIMIT ".$offset.", 5";
-        return $this->connection->query($query);
+    protected function pagenate(array $num){
+        $offset = ($num[0] - 1) * 5;
+        $this -> limit($offset, 5);
+        return $this->get();
 
     }
 
-    public function sort(string $sort, string $field){
+    protected function sort(string $sort, string $field){
         $data = $this->get();
         $datas = [];
         foreach($data as $y){

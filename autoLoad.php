@@ -9,6 +9,9 @@ class autoLoad{
         if ($className == 'mainDB' || $className == 'product' || $className == 'category' || $className == 'usery' || $className == 'model') {
             $class = "model/".$class;
         }
+        if ($className == "builderFacade") {
+            $class = "facade/".$class;
+        }
         if (file_exists($class)) {
             include "$class";
         } else {

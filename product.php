@@ -71,18 +71,17 @@ if ($uriArr[count($uriArr)-2] == 'page') {
 */
 
     if (!$_POST) {
-        $x = product::with('category')->pagenate($uriArr[4]);
-        
-        while($a = $x->fetch_assoc()){
-            echo $a['product_id'],"+++++",$a['product_name']," ____ ",$a['product_price'], " ___ ", $a['category_id'], " ____ ", $a["category_name"];
+        $rows = product::with('category', "LEFT")->pagenate($uriArr[4]);
+        foreach($rows as $row){
+            echo $row['product_id'],"+++++",$row['product_name']," ____ ",$row['product_price'], " ___ ", $row['category_id'], " ____ ", $row["category_name"];
             ?>
-            <a href="http://localhost/ecommerce/editPro/<?= $a['product_id']; ?>" style="color: green;">edit</a>
-            <a href="http://localhost/ecommerce/deletePro/<?= $a['product_id']; ?>" style="color: red;">delete</a>
-            <a href="http://localhost/ecommerce/showPro/<?= $a['product_id']; ?>" style="color: blue;">show</a>
+            <a href="http://localhost/ecommerce/editPro/<?= $row['product_id']; ?>" style="color: green;">edit</a>
+            <a href="http://localhost/ecommerce/deletePro/<?= $row['product_id']; ?>" style="color: red;">delete</a>
+            <a href="http://localhost/ecommerce/showPro/<?= $row['product_id']; ?>" style="color: blue;">show</a>
             </br>
             <?php
         }
-         $num = 1;
+        $num = 1;
         $all = product::all();
         $count = $all->num_rows;
         for ($i=0; $i < $count / 5; $i++) {
@@ -92,7 +91,6 @@ if ($uriArr[count($uriArr)-2] == 'page') {
             $num++;
         }
     }
-
 
 
 
@@ -154,16 +152,6 @@ if ($uriArr[count($uriArr)-2] == 'page') {
             <label for="to">to:</label>
             <input type="number" min="0" name="to" id="to">
         </div>
-        </div>
-        <button style="martin-top: 30px; border: 1px solid black; padding: 5px;">submit</button>
-    </form>
-    <form action="http://localhost/ecommerce/innerJoin/page/1" method="post">
-      <div style="margin-top: 10px; margin-bottom: 10px;">
-            <label for="type">type:</label>
-            <select name="type" id="type">
-                <option value="!empty">with category</option>
-                <option value="empty">without category</option>
-            </select>
         </div>
         <button style="martin-top: 30px; border: 1px solid black; padding: 5px;">submit</button>
     </form>
