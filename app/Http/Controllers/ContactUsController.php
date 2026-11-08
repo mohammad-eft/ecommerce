@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Models\contactUs;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\classes\homeSetting;
+class ContactUsController extends Controller
+{
+    public function create()
+    {
+        $setting = homeSetting::document();
+        return view('contactUs.create', ['setting'=>$setting]);
+    }
+
+    public function store(Request $request)
+    {
+        $userId = null;
+        if(Auth::check()){
+            $userId = Auth::id();
+        }
+        contactUs::create([
+            'user_id'=>$userId,
+            'title' => $request->title,
+            'description' => $request->description,
+            'phoneNumber' => $request->phoneNumber
+        ]);
+        if(Auth::check())
+            return to_route('contactUs.myMessage');
+        if(!Auth::check())
+            return to_route('home');
+    }
+
+    public function index()
+    {
+        $allContactUs = contactUs::all();
+        $setting = homeSetting::document();
+        return view('admin.contactUs.index', ['allContactUs' => $allContactUs, 'setting'=>$setting]);
+    }
+    public function single(contactUs $contactUs)
+    {
+        $setting = homeSetting::document();
+        return view('admin.contactUs.single', ['contactUs' => $contactUs, 'setting'=>$setting]);
+    }
+    public function clientSingle(contactUs $contactUs)
+    {
+        $setting = homeSetting::document();
+        return view('contactUs.show', ['contactUs' => $contactUs, 'setting'=>$setting]);
+    }
+    public function myMessage()
+    {
+        $setting = homeSetting::document();
+        return view('contactUs.myMessage', ['setting'=>$setting]);
+    }
+
+    public function edit(contactUs $contactUs)
+    {
+        $setting = homeSetting::document();
+        return view('contactUs.edit', ['contactUs' => $contactUs,'setting'=>$setting]);
+    }
+
+    public function update(Request $request)
+    {
+        $contactUs = contactUs::find($request->id);
+        $contactUs->title = $request->title;
+        $contactUs->description = $request->description;
+        $contactUs->phoneNumber = $request->phoneNumber;
+        $contactUs->save();
+        return to_route('contactUs.myMessage');
+    }
+
+    public function delete(contactUs $contactUs)
+    {
+        $contactUs->delete();
+        return to_route('contactUs.myMessage');
+    }
+     public function deleteAll(Request $request)
+    {
+        if($request->allContactUs && count($request->allContactUs) > 0){
+            contactUs::whereIn('id', $request->allContactUs)->delete();
+        }
+        return redirect()->back();
+    }
+}
