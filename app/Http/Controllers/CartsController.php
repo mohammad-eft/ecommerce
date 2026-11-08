@@ -1,0 +1,221 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\classes\homeSetting;
+use App\Models\carts;
+use App\Models\category;
+use App\Models\pack;
+use Illuminate\Http\Request;
+use App\Models\province_cities;
+use Illuminate\Support\Facades\Auth;
+use Log;
+
+class CartsController extends Controller
+{
+    public function store(Request $request)
+    {
+        $user_id = Auth::id();
+        if (!Auth::check()) {
+            $user_id = $request->input('user_id');
+        }
+        $cart = carts::create([
+            'product_id' => $request->product_id,
+            'user_id' => $user_id,
+            'quantity' => $request->quantity ? $request->quantity : 1,
+        ]);
+
+        return response()->json($cart);
+    }
+
+    public function delete(Request $request)
+    {
+        $product_id = $request->input('product_id');
+        $cart = carts::where('user_id', $request->user_id)->where('product_id', $request->product_id)->where('order_id', null)->first();
+        $cart->product;
+        $data = $cart;
+        if ($cart) {
+            $cart->delete();
+        }
+        $remainingItems = carts::where('user_id', $request->user_id)->where('order_id', null)->get();
+        $count = $remainingItems->sum('quantity');
+        return response()->json([
+            'message' => 'محصول از سبد خرید حذف شد',
+            'data' => $data,
+            'count' => $count,
+            'product_id' => $product_id,
+        ]);
+    }
+
+    function update(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        if (Auth::check()) {
+            $user_id = Auth::id();
+        }
+        $cart = carts::where(['product_id' => $request->product_id, 'user_id' => $user_id, 'order_id' => null])->first();
+        $cart->quantity = $request->quantity ? $request->quantity : 1;
+        $cart->save();
+        $cart->product;
+        return response()->json($cart);
+    }
+
+    public function showCarts(Request $request)
+    {
+        $carts = carts::where('user_id', $request->user_id)->where('order_id', null)->get();
+        $total_price = 0;
+        $cartData = [];
+        foreach ($carts as $cart) {
+            $product = $cart->product;
+            $price = $cart->product->secondary_price ? $cart->product->secondary_price : $cart->product->primary_price;
+            $total_price += $price * $cart->quantity;
+
+            if ($product->media->isNotEmpty()) {
+                foreach ($product->media as $media) {
+                    if ($media['is_main']) {
+                        $product['mainImg'] = $media['media_path'];
+                        break;
+                    } else {
+                        $product['mainImg'] = 'default.jpg';
+                    }
+                }
+            } else {
+                $product['mainImg'] = 'default.jpg';
+            }
+
+            $cartData[] = [
+                'summary' => $cart->product->summary,
+                'user_id' => $cart->user_id,
+                'id' => $cart->id,
+                'product_id' => $cart->product_id,
+                'product_name' => $cart->product->title ?? 'محصول',
+                'quantity' => $cart->quantity,
+                'price' => $price,
+                'total' => $price * $cart->quantity,
+                'img' => $product->mainImg
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'carts' => $cartData,
+            'total_price' => $total_price,
+            'count' => $carts->sum('quantity')
+        ]);
+    }
+
+    // public function list()
+    // {
+    //     $categories = category::all();
+    //     $setting = homeSetting::document();
+
+    //     Auth::user()->load(['carts' => function ($query) {
+    //         $query->whereNull('order_id')->with(['product' => function ($query) {
+    //             $query->get();
+    //         }]);
+    //     }]);
+    //     $totalPrice = 0;
+    //     $totalDiscount = 0;
+    //     foreach (Auth::user()->carts as $cart) {
+    //         if($cart->product_id){
+    //             if ($cart->product->secondary_price) {
+    //                 $totalPrice += $cart->product->secondary_price * $cart->quantity;
+    //                 $totalDiscount += ($cart->product->primary_price - $cart->product->secondary_price)*$cart->quantity;
+    //             } else {
+    //                 $totalPrice += $cart->product->primary_price * $cart->quantity;
+    //             }
+    //             if ($cart->product->media->isNotEmpty()) {
+    //                 foreach ($cart->product->media as $media) {
+    //                     if ($media->is_main) {
+    //                         $cart->product->image = $media->media_path;
+    //                         break;
+    //                     } else {
+    //                         $cart->product->image = 'default.jpg';
+    //                     }
+    //                 }
+    //             } else {
+    //                 $cart->product->image = 'default.jpg';
+    //             }
+    //         } elseif($cart->pack_id){
+    //             if ($cart->pack->secondary_price) {
+    //                 $totalPrice += $cart->pack->secondary_price * $cart->quantity;
+    //                 $totalDiscount += ($cart->pack->primary_price - $cart->pack->secondary_price)*$cart->quantity;
+    //             } else {
+    //                 $totalPrice += $cart->pack->primary_price * $cart->quantity;
+    //             }
+    //             if (!$cart->pack->image) {
+    //                 $cart->pack->image = 'default.jpg';
+    //             }
+                    
+    //         }
+    //     }
+    //     return view('user.cart.cart', ['categories' => $categories, 'setting' => $setting, 'totalPrice' => $totalPrice, 'totalDiscount' => $totalDiscount]);
+    // }
+    public function list()
+    {
+        $categories = category::all();
+        $setting = homeSetting::document();
+
+        
+        return view('user.cart.cart', ['categories' => $categories, 'setting' => $setting]);
+    }
+
+    public function packStore(Request $request)
+    {
+        $packId = $request->input('packId');
+        $quantity = $request->input('quantity');
+        $userId = $request->input('userId');
+        $cart = carts::create([
+            'pack_id' => $packId,
+            'user_id' => $userId,
+            'quantity' => $quantity ? $quantity : 1,
+        ]);
+        return response()->json($cart);
+    }
+
+     function packUpdate(Request $request)
+    {
+        $user_id = $request->input('userId');
+        if (Auth::check()) {
+            $user_id = Auth::id();
+        }
+        $cart = carts::where(['pack_id' => $request->packId, 'user_id' => $user_id, 'order_id' => null])->first();
+        $cart->quantity = $request->quantity ? $request->quantity : 1;
+        $cart->pack;
+        $cart->save();
+
+        return response()->json($cart);
+    }
+    public function packDelete(Request $request)
+    {
+        $packId = $request->input('packId');
+        $cart = carts::where('user_id', $request->userId)->where('pack_id', $packId)->where('order_id', null)->first();
+        $cart->pack;
+        $data = $cart;
+        if ($cart) {
+            $cart->delete();
+        }
+        $remainingItems = carts::where('user_id', $request->userId)->where('order_id', null)->get();
+        $count = $remainingItems->sum('quantity');
+        return response()->json([
+            'message' => 'محصول از سبد خرید حذف شد',
+            'data' => $data,
+            'count' => $count,
+            'pack_id' => $packId,
+        ]);
+    }
+
+    public function checkout(){
+        $categories = category::all();
+        $setting = homeSetting::document();
+        $provinces = province_cities::where('parent', 0)->get();
+        $cities = province_cities::where('parent', 1)->get();
+        return view('user.cart.checkout', ['categories' => $categories, 'setting' => $setting, 'provinces'=>$provinces, 'cities'=>$cities]);
+    }
+
+    public function showCities(Request $request){
+        $provinceId = $request->input('provinceId');
+        $cities = province_cities::where('parent', $provinceId)->get();
+        return response()->json($cities);
+    }
+}

@@ -1,0 +1,244 @@
+<?php
+
+use App\Http\Controllers\CartsController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Middleware\AuthMiddleware;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\PackController;
+use App\Http\Controllers\SearchController;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+use App\Models\product;
+use App\Models\User;
+use App\Models\role_user;
+
+Route::get('/test', function(){
+    // $dateTime = explode(' ', verta());
+    // $date = implode('/', explode('-', $dateTime[0]));
+    // $currentTime = explode(':', $dateTime[1]);
+    // unset($currentTime[count($currentTime)-1]);
+    // $time = implode(':', $currentTime);
+    // Schema::table('carts', function (Blueprint $table) {
+    //     $table->integer('product_id')->nullable()->change();
+    //     $table->integer('user_id')->nullable()->change();
+    //     $table->integer('pack_id')->after('product_id')->nullable();
+    // });
+    // Schema::table('packs', function(Blueprint $table){
+    //     $table->integer('count')->default(1)->after('image');
+    // });
+    // Schema::table('phone_codes', function(Blueprint $table){
+    //     $table->string('phoneNumber')->unique()->change();
+    // });
+    // // product::where('id', '>', 0)->update(['show_in_home'=>1]);
+
+    // $userIds = User::pluck('id')->toArray();
+    // role_user::where('id', '>', 0)->delete();
+    // foreach($userIds as $userId){
+    //     role_user::create([
+    //         'user_id'=>$userId,
+    //         'role_id'=> $userId == 1 || $userId == 16 ? 1 : 2
+    //     ]);
+    // }
+
+    Schema::table('packs', function(Blueprint $table){
+        $table->string('count')->default(0)->after('image');
+    });
+});
+
+Route::get('/', [SettingController::class, 'home'])->name('home');
+
+Route::get('/login', [UserController::class, 'login'])->name('login');
+Route::get('/signup', [UserController::class, "create"])->name('signup');
+Route::post('/check', [UserController::class, "checkAuth"])->name('checkAuth');
+Route::get('/logout', [UserController::class, "logout"])->name('logout');
+
+Route::get('/checkout', [CartsController::class, 'checkout'])->name('checkout');
+
+Route::group([
+    'prefix' => 'users',
+    'controller' => UserController::class,
+    'as' => 'user.',
+    'middleware' => [AuthMiddleware::class]
+], function () {
+    Route::post("/store", "store")->name('store')->withoutMiddleware([AuthMiddleware::class]);
+    Route::post("/check", "check")->name('check')->withoutMiddleware([AuthMiddleware::class]);
+    Route::get("/logout", "logout")->name('logout');
+    Route::get("/", "index")->name('list');
+    Route::get("/panel/{user}", "panel")->name('panel');
+    Route::get('/profile/{user?}', 'profile')->name('profile');
+    Route::get('/show/{user}', 'show')->name('show');
+    Route::get("/edit/{user}", "edit")->name('edit');
+    Route::post("/update", "update")->name('update');
+    Route::get("/delete/{user}", "delete")->name('delete');
+    Route::get('/compelete', 'compelete_form')->name('compelete_form');
+    Route::post('/save', 'save')->name('save');
+    Route::get('/setting', 'setting')->name('setting');
+    Route::post('/set', 'set')->name('set');
+    route::post('/set_order', 'set_order')->name('set_order');
+    Route::get('/create_user', 'create_user')->name('create_user');
+    Route::post('/store_user', 'store_user')->name('store_user');
+    Route::get('/dashboard', 'dashboard')->name('dashboard');
+});
+
+// category routes
+Route::group([
+    'prefix' => 'category',
+    'controller' => CategoryController::class,
+    'as' => 'category.',
+    'middleware' => AdminMiddleware::class
+], function () {
+    Route::get('/create', 'create')->name('create');
+    Route::post('/store', 'store')->name('store');
+    Route::get('/admin/list', 'adminIndex')->name('adminIndex');
+    Route::post('/admin/show', 'adminShow')->name('adminShow');
+    Route::post('/edit', 'edit')->name('edit');
+    Route::post('/update', 'update')->name('update');
+    Route::get('/delete/{id}', 'delete')->name('delete');
+    Route::get('/list', 'index')->withoutMiddleware(AdminMiddleware::class)->name('index');
+    Route::get('/relatedProducts/{category}', 'relatedProducts')->withoutMiddleware(AdminMiddleware::class)->missing(function () {
+        return to_route('missing');
+
+    })->name('relatedProducts');
+    Route::get('/show' , 'show')->name('show');
+
+
+    // Route::get('/show/{category}', 'show')->withoutMiddleware(AdminMiddleware::class)->missing(function () {
+    //     return to_route('missing');
+    // })->name('show');
+    // Route::post('/showSubCategories', 'showSubCats')->withoutMiddleware(AdminMiddleware::class)->name('showSubCats');
+    // Route::post('/admin/deleteAll', 'deleteAll')->name('deleteAll');
+});
+
+
+// product routes
+Route::group([
+    'prefix' => 'product',
+    'controller' => ProductController::class,
+    'as' => 'product.',
+    'middleware' => AdminMiddleware::class
+], function () {
+    Route::get('/create', 'create')->name('create');
+    Route::post('/store', 'store')->name('store');
+    Route::get('/admin/list', 'adminIndex')->name('adminIndex');
+    Route::post('/edit', 'edit')->name('edit');
+    Route::post('/update', 'update')->name('update');
+    Route::get('/delete/{id}', 'delete')->name('delete');
+    Route::get('/show/{product}', 'show')->withoutMiddleware(AdminMiddleware::class)->missing(function () {
+        return to_route('missing');
+    })->name('show');
+    Route::get('/list', 'index')->withoutMiddleware(AdminMiddleware::class)->name('index');
+    Route::post('/filterRelatedProducts', 'filter')->withoutMiddleware(AdminMiddleware::class)->name('filter');
+    Route::post('/search', 'search')->withoutMiddleware(AdminMiddleware::class)->name('search');
+    Route::post('/searchResult', 'searchResult')->withoutMiddleware(AdminMiddleware::class)->name('searchResult');
+    // Route::get('/admin/show/{product}', 'adminShow')->missing(function () {
+    //     return to_route('missing');
+    // })->name('adminShow');
+    // Route::post('/admin/deleteAll', 'deleteAll')->name('deleteAll');
+});
+
+Route::group([
+    'prefix'=>'setting',
+    'controller'=>SettingController::class,
+    'middleware'=>[AdminMiddleware::class],
+    'as'=>'setting.'
+
+], function(){
+    Route::get('/headerSettings', 'headerSettings')->name('headerSettings');
+    Route::post('/storeHeaderSetting', 'storeHeaderSetting')->name('storeHeaderSetting');
+    Route::get('/bannerSettings', 'bannerSettings')->name('bannerSettings');
+    Route::post('/storeBanners', 'storeBanners')->name('storeBanners');
+    Route::get('/cardSettings', 'cardSettings')->name('cardSettings');
+    Route::post('/cardStore', 'cardStore')->name('cardStore');
+    Route::get('/serviceSettings', 'serviceSettings')->name('serviceSettings');
+    Route::post('/serviceStore', 'serviceStore')->name('serviceStore');
+    Route::get('/footerSettings', 'footerSettings')->name('footerSettings');
+    Route::post('/footerStore', 'footerStore')->name('footerStore');
+    Route::get('/packSetting', 'packSetting')->name('packSetting');
+    Route::post('/storePackSetting', 'storePackSetting')->name('storePackSetting');
+});
+
+Route::group([
+    'prefix'=>'search',
+    'controller'=>SearchController::class,
+    'as'=>'search.'
+], function(){
+    // Route::post('/', 'search')->name('search');
+    Route::post('/', 'page')->name('page');
+});
+
+Route::group([
+    'prefix'=>'cart',
+    'controller'=>CartsController::class,
+    'as'=>'cart.'
+], function(){
+    Route::get('/', 'list')->name('list');
+});
+
+// aboutUs
+Route::group([
+    'prefix' => 'aboutUs',
+    'controller' => AboutUsController::class,
+    'as' => 'aboutUs.',
+    'middleware' => [AuthMiddleware::class]
+], function () {
+    Route::get('/create_edit/{aboutUs?}', 'create_edit')->name('create_edit');
+    Route::post('/updateOrcreate', 'updateOrcreate')->name('updateOrcreate');
+    Route::get('/aboutUs', 'index')->name('list');
+    Route::get('/delete/{aboutUs}', 'delete')->name('delete');
+    Route::get('/clientList', 'clientList')->name('clientList')->withoutMiddleware([AuthMiddleware::class]);
+});
+
+///contactUs
+Route::group([
+    'prefix' => 'contactUs',
+    'controller' => contactUsController::class,
+    'as' => 'contactUs.',
+    'middleware' => [AuthMiddleware::class]
+], function () {
+    Route::get('/create', 'create')->name('create')->withoutMiddleware([AuthMiddleware::class]);
+    Route::post('/store', 'store')->name('store')->withoutMiddleware([AuthMiddleware::class]);
+    Route::get('/myMessage', 'myMessage')->name('myMessage');
+    Route::get('/contactUs', 'index')->name('list');
+    Route::get('/single/{contactUs}', 'single')->name('single');
+    Route::get('/clientSingle/{contactUs}', 'clientSingle')->name('show');
+    Route::get('/edit/{contactUs}', 'edit')->name('edit');
+    Route::post('/update', 'update')->name('update');
+    Route::get('/delete/{contactUs}', 'delete')->name('delete');
+    Route::post('/deleteAll', 'deleteAll')->name('deleteAll');
+});
+
+Route::group([
+    'prefix'=>'order',
+    'controller'=>OrdersController::class,
+    'middleware'=>AuthMiddleware::class,
+    'as'=>'order.'
+], function(){
+    Route::get('/create', 'create')->name('create');
+    Route::post('/store', 'store')->name('store')->withoutMiddleware([AuthMiddleware::class]);
+    Route::get('/index', 'index')->name('index');
+    Route::get('/userOrders', 'userOrders')->name('userOrders');
+});
+
+Route::group([
+    'prefix'=>'pack',
+    'controller'=>PackController::class,
+    'middleware'=>[AuthMiddleware::class],
+    'as'=>'pack.'
+], function(){
+    Route::get('/create', 'create')->name('create');
+    Route::Post('/store', 'store')->name('store');
+    Route::get('/edit/{pack}', 'edit')->name('edit');
+    Route::post('/update/{pack}', 'update')->name('update');
+    Route::get('/delete/{pack}', 'delete')->name('delete');
+    Route::get('/', 'index')->name('index');
+    Route::get('/list', 'list')->name('list')->withoutMiddleware([AuthMiddleware::class]);
+    Route::get('/single/{pack}', 'single')->name('single')->withoutMiddleware([AuthMiddleware::class]);
+});
