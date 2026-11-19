@@ -242,7 +242,7 @@
                         </div>
 
                         <div class="field-group">
-                            <label for="category_ids">دسته‌بندی‌ها <span class="text-red-500">*</span></label>
+                            <label for="category_ids">دسته‌بندی‌ها </label>
                             <select name="category_ids[]" id="category_ids" multiple size="1">
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}" @if (in_array($category->id, old('category_ids', []))) selected @endif>

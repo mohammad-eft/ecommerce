@@ -17,7 +17,7 @@ class ProductController extends Controller
 {
     public function create()
     {
-        $cats = category::all();
+        $cats = category::whereNot('title', 'بدون دسته بندی')->get();
         $setting = homeSetting::document();
         return view('admin.product.create', ['categories' => $cats, 'setting'=>$setting]);
     }
@@ -28,13 +28,13 @@ class ProductController extends Controller
                 'title' => ['required'],
                 'mainImage' => ['max:100'],
                 'gallery.*' => ['max:500'],
-                'category_ids' => ['required'],
+                'category_ids' => ['nullable'],
             ],
             [
                 'title.required' => 'پر کردن این فیلد الزامی است.',
                 'mainImage.max' => 'حجم فایل نباید بیشتر از 100 کیلوبایت باشد.',
                 'gallery.*.max' => 'حجم کل فایل ها نباید بیشتر از 500 کیلوبایت باشد.',
-                'category_ids.required' => 'پر کردن این فیلد الزامی است.',
+                'category_ids.nullable' => 'پر کردن این فیلد الزامی است.',
             ]
         );
         $product = product::create([
@@ -53,6 +53,12 @@ class ProductController extends Controller
                     'category_id' => $cat_id
                 ]);
             }
+        } else {
+            $cat = category::where('title', 'بدون دسته بندی')->first();
+            category_product::create([
+                'product_id'=>$product['id'],
+                'category_id'=>$cat->id,
+            ]);
         }
         if (isset($request['attributes'])) {
             foreach ($request['attributes']['attribute_key'] as $index => $key) {
@@ -89,7 +95,7 @@ class ProductController extends Controller
     }
     public function adminIndex()
     {
-        $products = product::with('media')->with('categories')->get();
+        $products = product::with('media')->with('categories')->orderBy('created_at', 'desc')->get();
         foreach ($products as $product) {
             if ($product->media->isNotEmpty()) {
                 foreach ($product->media as $media) {
@@ -111,7 +117,7 @@ class ProductController extends Controller
     {
         $catIds = product::find($request['id'])->categories->pluck('id');
         $product = product::find($request['id'])->load('attributes')->load('categories');
-        $categories = category::select(['id', 'title'])->get();
+        $categories = category::whereNot('title', 'بدون دسته بندی')->where(['parent_id', 0])->get();
         if ($product->media->isNotEmpty()) {
             foreach ($product->media as $media) {
                 $media->media_path = asset('storage/' . $media['media_path']);
@@ -142,11 +148,20 @@ class ProductController extends Controller
         $product->secondary_price = $request['secondary_price'];
         $product->count = $request['count'];
         $product->show_in_home = $request['show_in_home'] ?? 0;
-        category_product::where('product_id', $product['id'])->delete();
-        foreach ($request['category_ids'] as $catId) {
+        if(isset($request->category_ids)){
+            category_product::where('product_id', $product['id'])->delete();
+            foreach ($request['category_ids'] as $catId) {
+                category_product::create([
+                    'product_id' => $product['id'],
+                    'category_id' => $catId,
+                ]);
+            }
+        } else {
+            category_product::where('product_id', $product['id'])->delete();
+            $cat = category::where('title', 'بدون دسته بندی')->first();
             category_product::create([
-                'product_id' => $product['id'],
-                'category_id' => $catId,
+                'product_id'=>$request->id,
+                'category_id'=>$cat->id
             ]);
         }
         if (isset($request['removedAttrs'])) {

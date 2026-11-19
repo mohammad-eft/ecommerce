@@ -20,6 +20,13 @@ use App\Models\product;
 use App\Models\User;
 use App\Models\role_user;
 
+Route::get('/setCat', function(){
+    category::create([
+        'title'=>'بدون دسته بندی',
+        'parent_id'=>0
+    ]);
+});
+
 Route::get('/test', function(){
     // $dateTime = explode(' ', verta());
     // $date = implode('/', explode('-', $dateTime[0]));
