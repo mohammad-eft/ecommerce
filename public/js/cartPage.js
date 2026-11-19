@@ -27,17 +27,25 @@ if (localStorage.getItem('products')) {
                 </div>
                 <div class="flex-1 min-w-0">
                     <h3 class="font-semibold text-gray-800 text-sm sm:text-base truncate">${cart.title}</h3>
-                    <p class="text-xs text-gray-500 mt-0.5 mb-5">${cart.summary ? cart.summary : cart.description}</p>
-                    <div class="w-full lg:w-1/4 p-2 flex gap-2 justify-center items-center rounded-xl addToCartBtns" data-product-id="${cart.id}">
+                    <p class="text-xs text-gray-500 mt-0.5 mb-5">${cart.summary ? cart.summary : ""}</p>
+                    <div class="w-full lg:w-1/2 p-2 flex gap-2 justify-center items-center rounded-xl addToCartBtns" data-product-id="${cart.id}">
                         <button onclick="setCount(this)" class="w-1/3 text-lg font-bold text-white flex justify-center items-center ${ cart.quantity == cart.count ? 'cursor-no-drop' : 'cursor-pointer' }" ${cart.quantity == cart.count ? 'disabled' : ''} data-state="+">+</button>
                         <input type="number" class="w-1/3 text-sm text-center outline-none text-white" readonly value="${cart.quantity}">
                         <button onclick="setCount(this)" class="w-1/3 text-lg font-bold text-white flex justify-center items-center cursor-pointer" data-state="-">-</button>
                     </div>
-                </div>
-                <div class="text-left shrink-0">
-                    <p class="font-bold text-gray-800 text-sm sm:text-base in-fa price">${cart.secondary_price ? cart.secondary_price : cart.primary_price}</p>
-                    <p class="text-xs text-gray-400">تومان</p>
-                </div>
+                </div>`
+                if(cart.primary_price || cart.secondary_price){
+                    html+=`
+                    <div class="text-left shrink-0">
+                        <p class="font-bold text-gray-800 text-sm sm:text-base in-fa price">${cart.secondary_price ? cart.secondary_price : cart.primary_price}</p>
+                        <p class="text-xs text-gray-400">تومان</p>
+                    </div>`
+                } else {
+                    html+=`
+                    <div class="text-sm">جهت استعلام قیمت تماس بگیرید</div>
+                    `
+                }
+            html+=`
             </div>
         `
         parentDiv.innerHTML = html

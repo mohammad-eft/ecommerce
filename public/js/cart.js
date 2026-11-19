@@ -177,9 +177,9 @@ function setCount(btn) {
                     button.innerHTML = initialHtml
                 }
             })
-            if(window.currentPage == 'cart'){
-                document.querySelectorAll('.cartPages').forEach(item=>{
-                    if(item.dataset.productId == productId){
+            if (window.currentPage == 'cart') {
+                document.querySelectorAll('.cartPages').forEach(item => {
+                    if (item.dataset.productId == productId) {
                         item.remove()
                     }
                 })
@@ -425,28 +425,111 @@ if (orderBasket) {
                 localProducts = JSON.parse(localStorage.getItem('products')) || []
                 if (localProducts.length) {
                     localProducts.forEach((prod) => {
-                        let element = document.createElement('div')
-                        element.classList = 'bg-white rounded-2xl p-4 flex gap-4 items-center shadow-sm border border-gray-100 parentItem'
+                        let element = document.createElement('div');
+
+                        element.className = 'parentItem flex items-center gap-3 p-3 bg-white rounded-2xl border border-gray-100 hover:border-blue-100 hover:shadow-md transition-all duration-300';
+
                         element.innerHTML = `
-                            <div class="w-16 h-20 sm:w-20 sm:h-24 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-xl flex items-center justify-center text-2xl shrink-0">
-                                <img src="${imgPath + prod.mainImg}" class="size-full object-cover" alt="">
+            <div class="w-[68px] h-[76px] sm:w-20 sm:h-20 shrink-0 overflow-hidden rounded-xl bg-gray-50 border border-gray-100">
+                <img src="${imgPath + prod.mainImg}" class="w-full h-full object-cover" alt="">
+            </div>
+
+            <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-sm text-[#010348] truncate">${prod.title}</h3>
+
+                <p class="text-[11px] text-gray-400 mt-1 mb-3 line-clamp-2 leading-5">
+                    ${prod.summary || ''}
+                </p>
+
+                <div class="addToCartBtns flex items-center justify-between w-[110px] h-9 p-1 rounded-lg bg-gray-50 border border-gray-100"
+                    data-product-id="${prod.id}">
+
+                    <button onclick="setCount(this)"
+                        class="w-7 h-7 rounded-md bg-white shadow-sm font-bold flex items-center justify-center hover:bg-[#010348] cursor-pointer !text-white transition disabled:opacity-40 disabled:cursor-not-allowed"
+                        data-state="+"
+                        ${prod.count == prod.quantity ? 'disabled' : ''}>+</button>
+
+                    <input type="number" class="w-8 text-center text-xs font-bold text-[#010348] bg-transparent outline-none in-fa"
+                        readonly value="${prod.quantity}">
+
+                    <button onclick="setCount(this)"
+                        class="w-7 h-7 rounded-md bg-white shadow-sm font-bold flex items-center justify-center hover:bg-[#010348] cursor-pointer !text-white transition"
+                        data-state="-">−</button>
+                </div>
+            </div>
+
+            <div class="shrink-0 text-left">
+                <p class="font-extrabold text-sm text-[#010348] in-fa">
+                    ${prod.secondary_price || prod.primary_price
+                                ? Number(prod.secondary_price || prod.primary_price).toLocaleString('en-US')
+                                : 'تماس بگیرید'}
+                </p>
+                <span class="text-[10px] text-gray-400">تومان</span>
+            </div>
+        `;
+
+                        if (parentCart) parentCart.append(element);
+                    });
+                }
+
+                localPacks = JSON.parse(localStorage.getItem('packs')) || [];
+
+                if (localPacks.length) {
+                    localPacks.forEach((pack) => {
+                        let element = document.createElement('div');
+
+                        element.className = 'parentItem flex items-center gap-3 p-3 bg-white rounded-2xl border border-gray-100 hover:border-blue-100 hover:shadow-md transition-all duration-300';
+
+                        element.innerHTML = `
+                            <div class="w-[68px] h-[76px] sm:w-20 sm:h-20 shrink-0 overflow-hidden rounded-xl bg-gray-50 border border-gray-100">
+                                <img src="${imgPath + pack.image}" class="w-full h-full object-cover" alt="">
                             </div>
-                            <div class="flex-1 min-w-0 products">
-                                <h3 class="font-semibold text-gray-800 text-sm sm:text-base truncate">${prod.title}</h3>
-                                <p class="text-xs text-gray-500 mt-0.5 mb-5 max-w-full h-8 max-h-8 overflow-hidden ellipsis-2">${prod.summary ? prod.summary : prod.description}</p>
-                                <div class="w-full p-2 bg-(--light-green-btn) hover:bg-(--green-btn) transition-all duration-300 group flex gap-2 justify-center items-center rounded-xl addToCartBtns" data-product-id="${prod.id}">
-                                    <button onclick="setCount(this)" class="w-1/3 text-lg font-bold text-(--primary-text-color) transition-all duration-300 group-hover:text-white flex justify-center items-center ${prod.count == prod.quantity ? 'cursor-no-drop' : 'cursor-pointer'}" ${prod.count == prod.quantity ? 'disabled' : ''} data-state="+">+</button>
-                                    <input type="number" class="w-1/3 text-sm text-center outline-none text-(--primary-text-color) transition-all duration-300 group-hover:text-white in-fa" readonly value="${prod.quantity}">
-                                    <button onclick="setCount(this)" class="w-1/3 text-lg font-bold text-(--primary-text-color) transition-all duration-300 group-hover:text-white flex justify-center items-center cursor-pointer" data-state="-">-</button>
+
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-sm text-[#010348] truncate">${pack.title}</h3>
+
+                                <p class="text-[11px] text-gray-400 mt-1 mb-3 line-clamp-2 leading-5">
+                                    ${pack.summary || ''}
+                                </p>
+
+                                <div class="addPackToCartBtn flex items-center justify-between w-[110px] h-9 p-1 rounded-lg bg-gray-50 border border-gray-100"
+                                    data-pack-id="${pack.id}">
+
+                                    <button onclick="setPackCount(this)"
+                                        class="w-7 h-7 rounded-md bg-white shadow-sm font-bold flex items-center justify-center hover:bg-[#010348] !text-white transition disabled:opacity-40 disabled:cursor-not-allowed"
+                                        data-state="+"
+                                        ${pack.count == pack.quantity ? 'disabled' : ''}>+</button>
+
+                                    <input type="number" class="w-8 text-center text-xs font-bold text-[#010348] bg-transparent outline-none in-fa"
+                                        readonly value="${pack.quantity}">
+
+                                    <button onclick="setPackCount(this)"
+                                        class="w-7 h-7 rounded-md bg-white shadow-sm font-bold flex items-center justify-center hover:bg-[#010348] !text-white transition"
+                                        data-state="-">−</button>
                                 </div>
                             </div>
-                            <div class="text-left shrink-0">
-                                <p class="font-bold text-gray-800 text-sm sm:text-base in-fa price">${prod.secondary_price ? prod.secondary_price : prod.primary_price}</p>
-                                <p class="text-xs text-gray-400">تومان</p>
-                            </div>
-                        `
-                        if (parentCart) parentCart.append(element)
-                    })
+                            <div class="shrink-0 text-left">
+                            `
+                        if (pack.secondary_price || pack.primary_price){
+                            element.innerHTML+=`
+                            <p class="font-extrabold text-sm text-[#010348] in-fa">
+                                ${pack.secondary_price || pack.primary_price
+                                            ? Number(pack.secondary_price || pack.primary_price).toLocaleString('en-US')
+                                            : 'تماس بگیرید'}
+                            </p>
+                            <span class="text-[10px] text-gray-400">تومان</span>`
+    
+                            
+                        } else {
+
+                            element.innerHTML +=`
+                            <p class="font-extrabold text-sm text-[#010348] in-fa">تماس بگیرید</p>
+                            </div>`
+                        }
+                        
+
+                        if (parentCart) parentCart.append(element);
+                    });
                 }
 
                 localPacks = JSON.parse(localStorage.getItem('packs')) || []

@@ -1,6 +1,6 @@
 @extends('app.document')
 @section('title')
-    طبابوک | لیست پک ها
+    دیارابزار | لیست پک ها
 @endsection
 @section('content')
     <section class="max-w-[1800px] w-11/12 mx-auto">

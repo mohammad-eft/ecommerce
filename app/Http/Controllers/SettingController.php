@@ -251,8 +251,8 @@ class SettingController extends Controller
         $setting = homeSetting::all();
         $categories = category::all();
         // $products = product::where('show_in_home', 1)->weherNotNull('secondary_price')->get();
-        $products = product::where('show_in_home', 1)->get();
-        $newProducts = product::where('show_in_home', 1)->orderBy('created_at', 'desc')->limit(6)->get();
+        $products = product::where('show_in_home', 1)->limit(5)->get();
+        $newProducts = product::orderBy('created_at', 'desc')->limit(5)->get();
         foreach ($products as $product) {
             if ($product->media->isNotEmpty()) {
                 foreach ($product->media as $media) {

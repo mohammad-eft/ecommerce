@@ -1,5 +1,5 @@
 @extends('app.document')
-@section('title', 'طبابوک | ویرایش ارتباط ما')
+@section('title', 'دیارابزار | ویرایش ارتباط ما')
 @section('content')
 
     <div class="text-center mb-4">

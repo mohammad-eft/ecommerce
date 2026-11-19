@@ -1,207 +1,532 @@
+
 @extends('app.document')
-@section('title', 'طبابوک | درباره ما')
+
+@section('title', 'دیار ابزار | درباره ما')
+
 @section('content')
-   
-    <style>
-        html { scroll-behavior: smooth; }
-        body { font-family: Vazirmatn, Tahoma, Arial, sans-serif; }
-        .container-x { width: min(1180px, calc(100% - 32px)); margin-inline: auto; }
-        .glass { background: rgba(255,255,255,.76); backdrop-filter: blur(12px); }
-        .line-title::after {
-            content: ""; display: block; width: 46px; height: 3px;
-            background: #0b8f4d; border-radius: 99px; margin: 10px auto 0;
+
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .container-x {
+        width: min(1180px, calc(100% - 32px));
+        margin-inline: auto;
+    }
+
+    .diar-hero {
+        background:
+            radial-gradient(circle at 10% 20%, rgba(237, 23, 31, .13), transparent 35%),
+            linear-gradient(135deg, #071b49 0%, #102b61 65%, #17428b 100%);
+    }
+
+    .diar-image {
+        min-height: 440px;
+    }
+
+    .diar-glass {
+        background: rgba(255, 255, 255, .94);
+        backdrop-filter: blur(12px);
+    }
+
+    .diar-line::after {
+        content: "";
+        display: block;
+        width: 48px;
+        height: 3px;
+        background: #ed171f;
+        border-radius: 20px;
+        margin: 12px auto 0;
+    }
+
+    .diar-card {
+        transition: all .3s ease;
+    }
+
+    .diar-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(237, 23, 31, .4);
+        box-shadow: 0 18px 35px rgba(7, 27, 73, .08);
+    }
+
+    .diar-icon {
+        background: #edf2ff;
+        color: #1455b8;
+    }
+
+    .diar-orange {
+        color: #ed171f;
+    }
+
+    .diar-bg {
+        background: #f5f7f9;
+    }
+
+    .diar-cta {
+        background: linear-gradient(120deg, #071b49, #153b7a);
+    }
+
+    @media(max-width: 768px) {
+        .diar-image {
+            min-height: 290px;
         }
-        .hero-image { min-height: 420px; }
-        @media (max-width: 768px) {
-            .hero-image { min-height: 280px; }
-        }
-    </style>
+    }
+</style>
 
+<div class="bg-white text-slate-800 mt-3">
 
-<div class="bg-white text-slate-800">
+    {{-- Top Bar --}}
+    <div class="bg-[#ed171f] text-white text-center text-xs sm:text-sm py-2 px-4">
+        دیار ابزار؛ همراه مطمئن شما در انتخاب ابزار مناسب
+    </div>
 
-<!-- Top Bar -->
-<div class="bg-brand text-white text-center text-xs sm:text-sm py-2 px-4">
-    هر کتاب کوچک، شروع یک ایده بزرگ است 🌱
-</div>
+    <main>
 
-<!-- Header -->
+        {{-- Hero --}}
+        <section class="diar-hero text-white overflow-hidden">
+            <div class="container-x grid lg:grid-cols-2 items-center gap-10">
 
+                <div class="py-16 sm:py-20 lg:py-24">
 
-<main>
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="w-10 h-[3px] bg-[#ed171f] rounded-full"></span>
+                        <span class="text-red-400 font-bold text-sm">
+                            آشنایی با دیار ابزار
+                        </span>
+                    </div>
 
-    <!-- Hero -->
-    <section id="about" class="bg-cream overflow-hidden">
-        <div class="container-x grid lg:grid-cols-2 items-stretch">
-            <div class="py-14 sm:py-20 lg:py-24 flex flex-col justify-center">
-                <div class="flex items-center gap-3 mb-5">
-                    <span class="w-12 h-[3px] bg-brand rounded-full"></span>
-                    <span class="text-brand font-semibold">{{ $aboutUs->title }}</span>
-                </div>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.35] text-slate-900">
-                    درباره ما
-                </h1>
-                {{-- <p class="mt-5 text-lg sm:text-xl font-medium leading-9 text-slate-700">
-                    ما اینجا هستیم تا کتاب، بخشی از زندگی شما باشد.
-                </p> --}}
-                <p class="mt-4 text-sm sm:text-base leading-8 text-slate-600 max-w-xl">
-                   {{ $aboutUs->description }}
-                </p>
-                {{-- <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="#story" class="px-6 py-3 rounded-xl bg-brand text-white font-semibold hover:bg-brandDark transition">
-                        داستان ما
-                    </a>
-                    <a href="#values" class="px-6 py-3 rounded-xl border border-brand/30 text-brand font-semibold hover:bg-white transition">
-                        ارزش‌های ما
-                    </a>
-                </div> --}}
-            </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.5]">
+                        ابزار درست،
+                        <span class="text-[#ed171f]">شروع یک کار حرفه‌ای</span>
+                    </h1>
 
-            <div class="hero-image relative overflow-hidden rounded-b-[35px] lg:rounded-b-none lg:rounded-r-[35px]">
-                <img
-                        src="{{asset('img/about-page-reference.webp')}}"
-                        alt="کتاب‌ها و فضای مطالعه"
-                        class="absolute inset-0 w-full h-full object-cover"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent"></div>
-                <div class="absolute bottom-6 right-6 left-6 glass rounded-2xl p-5 shadow-soft">
-                    <p class="font-bold text-slate-800">برای هر سلیقه، یک کتاب خوب</p>
-                    <p class="text-sm text-slate-600 mt-1">انتخابی ساده برای شروع یک تجربه تازه.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why -->
-    {{-- <section class="py-16 sm:py-20">
-        <div class="container-x">
-            <div class="text-center mb-10">
-                <h2 class="line-title text-2xl sm:text-3xl font-extrabold text-brand">چرا کتاب‌یار؟</h2>
-                <p class="mt-5 text-sm sm:text-base text-slate-500">ما فقط کتاب نمی‌فروشیم؛ یک تجربه بهتر برای انتخاب و خرید می‌سازیم.</p>
-            </div>
-
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                <article class="rounded-2xl bg-[#f5faf4] p-7 text-center hover:-translate-y-1 transition shadow-sm">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-[#e0f1df] grid place-items-center text-2xl">📚</div>
-                    <h3 class="font-bold mt-5">تنوع بالا</h3>
-                    <p class="text-sm text-slate-500 leading-7 mt-3">از پرفروش‌ترین‌ها تا کتاب‌های تخصصی و جذاب.</p>
-                </article>
-                <article class="rounded-2xl bg-[#f5faf4] p-7 text-center hover:-translate-y-1 transition shadow-sm">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-[#e0f1df] grid place-items-center text-2xl">🚚</div>
-                    <h3 class="font-bold mt-5">ارسال سریع</h3>
-                    <p class="text-sm text-slate-500 leading-7 mt-3">سفارش شما در کوتاه‌ترین زمان به دستتان می‌رسد.</p>
-                </article>
-                <article class="rounded-2xl bg-[#f5faf4] p-7 text-center hover:-translate-y-1 transition shadow-sm">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-[#e0f1df] grid place-items-center text-2xl">🛡️</div>
-                    <h3 class="font-bold mt-5">اصالت کالا</h3>
-                    <p class="text-sm text-slate-500 leading-7 mt-3">تلاش می‌کنیم خریدی مطمئن و باکیفیت داشته باشید.</p>
-                </article>
-                <article class="rounded-2xl bg-[#f5faf4] p-7 text-center hover:-translate-y-1 transition shadow-sm">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-[#e0f1df] grid place-items-center text-2xl">💬</div>
-                    <h3 class="font-bold mt-5">پشتیبانی واقعی</h3>
-                    <p class="text-sm text-slate-500 leading-7 mt-3">برای انتخاب و خرید، همیشه کنار شما هستیم.</p>
-                </article>
-            </div>
-        </div>
-    </section> --}}
-
-    <!-- Story -->
-    {{-- <section id="story" class="pb-16 sm:pb-20">
-        <div class="container-x">
-            <div class="rounded-[28px] overflow-hidden bg-softGreen grid lg:grid-cols-2 shadow-soft">
-                <div class="p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
-                    <span class="text-brand font-bold">داستان ما</span>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold mt-3">از یک علاقه کوچک تا یک دنیای بزرگ</h2>
-                    <p class="mt-5 leading-8 text-sm sm:text-base text-slate-600">
-                        کتاب‌یار با یک هدف ساده شروع شد؛ اینکه پیدا کردن کتاب مورد علاقه،
-                        به اندازه خواندن آن لذت‌بخش باشد. امروز با همین نگاه، سعی می‌کنیم
-                        انتخاب‌های متنوع، اطلاعات کاربردی و خریدی آسان را کنار هم قرار دهیم.
+                    <p class="mt-6 text-sm sm:text-base leading-9 text-slate-300 max-w-xl">
+                        دیار ابزار با هدف فراهم کردن دسترسی آسان به ابزارآلات
+                        ساختمانی و صنعتی فعالیت می‌کند. ما باور داریم انتخاب
+                        ابزار مناسب، فقط خرید یک محصول نیست؛ بلکه قدمی مهم
+                        برای افزایش کیفیت، سرعت و دقت در انجام کارهاست.
                     </p>
-                    <a href="#contact" class="mt-7 self-start rounded-xl bg-brand text-white px-6 py-3 font-semibold hover:bg-brandDark transition">
-                        با ما آشنا شوید ←
-                    </a>
+
+                    <p class="mt-3 text-sm sm:text-base leading-9 text-slate-300 max-w-xl">
+                        تلاش ما این است که تجربه‌ای ساده و مطمئن از جست‌وجو،
+                        انتخاب و خرید ابزار را برای فعالان حوزه ساختمان،
+                        صنعت و تمام علاقه‌مندان به کارهای فنی فراهم کنیم.
+                    </p>
+
+                    <div class="mt-9 flex flex-wrap gap-3">
+                        <a href="{{ url('/') }}"
+                           class="px-7 py-3.5 rounded-xl bg-[#ed171f] text-white font-bold hover:bg-red-700 transition">
+                            مشاهده فروشگاه
+                        </a>
+
+                        <a href="#why-diar"
+                           class="px-7 py-3.5 rounded-xl border border-white/25 text-white font-bold hover:bg-white/10 transition">
+                            چرا دیار ابزار؟
+                        </a>
+                    </div>
+
                 </div>
-                <div class="min-h-[300px] lg:min-h-[440px]">
+
+                <div class="diar-image relative overflow-hidden rounded-t-[30px] lg:rounded-t-none lg:rounded-l-[30px]">
+
                     <img
-                            src="{{asset('img/about-page-reference.webp')}}"
-                            alt="کتاب باز"
-                            class="w-full h-full object-cover"
-                    />
+                        src="{{ asset('img/about.png') }}"
+                        alt="ابزارآلات ساختمانی و صنعتی دیار ابزار"
+                        class="absolute inset-0 w-full h-full object-cover"
+                    >
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#071b49]/80 via-transparent to-transparent"></div>
+
+                    <div class="absolute bottom-6 right-6 left-6 diar-glass rounded-2xl p-5 shadow-xl">
+
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-[#edf2ff] flex items-center justify-center text-2xl">
+                                🔧
+                            </div>
+
+                            <div>
+                                <p class="font-extrabold text-slate-900">
+                                    ابزار مناسب برای هر پروژه
+                                </p>
+                                <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                                    انتخابی آگاهانه برای کاری باکیفیت‌تر
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
+
             </div>
-        </div>
-    </section> --}}
+        </section>
 
-    <!-- Values -->
-    {{-- <section id="values" class="py-16 sm:py-20 bg-white">
-        <div class="container-x">
-            <div class="text-center mb-12">
-                <h2 class="line-title text-2xl sm:text-3xl font-extrabold text-brand">ارزش‌های ما</h2>
-                <p class="mt-5 text-slate-500">چیزهایی که در مسیرمان به آن‌ها پایبندیم.</p>
+
+        {{-- Introduction --}}
+        <section class="py-16 sm:py-20">
+
+            <div class="container-x grid lg:grid-cols-2 gap-12 items-center">
+
+                <div>
+                    <span class="text-[#ed171f] font-bold text-sm">
+                        ما چه کاری انجام می‌دهیم؟
+                    </span>
+
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-4 leading-relaxed">
+                        فقط فروش ابزار نیست؛
+                        <span class="text-[#ed171f]">کمک به انتخاب بهتر است.</span>
+                    </h2>
+
+                    <p class="mt-5 text-sm sm:text-base leading-9 text-slate-600">
+                        در دیار ابزار تلاش می‌کنیم مجموعه‌ای کاربردی از
+                        ابزارآلات موردنیاز پروژه‌های ساختمانی، صنعتی و فنی
+                        در اختیار شما قرار دهیم.
+                    </p>
+
+                    <p class="mt-4 text-sm sm:text-base leading-9 text-slate-600">
+                        از ابزارهای برقی و دستی گرفته تا تجهیزات موردنیاز
+                        کارگاه‌ها و پروژه‌های ساختمانی، هدف ما این است که
+                        بتوانید متناسب با نیاز و نوع فعالیت خود، محصول
+                        مناسبی انتخاب کنید.
+                    </p>
+
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+
+                    <div class="rounded-3xl bg-[#f5f7f9] p-6">
+                        <div class="text-3xl mb-5">⚙️</div>
+                        <h3 class="font-extrabold text-slate-800">
+                            ابزارهای برقی
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 leading-7 mt-3">
+                            تجهیزات کاربردی برای انجام کارهای فنی و ساختمانی
+                        </p>
+                    </div>
+
+                    <div class="rounded-3xl bg-[#eef3ff] p-6 mt-8">
+                        <div class="text-3xl mb-5">🔨</div>
+                        <h3 class="font-extrabold text-slate-800">
+                            ابزارهای دستی
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 leading-7 mt-3">
+                            ابزارهای موردنیاز برای کارهای روزمره و تخصصی
+                        </p>
+                    </div>
+
+                    <div class="rounded-3xl bg-[#eef3ff] p-6">
+                        <div class="text-3xl mb-5">📐</div>
+                        <h3 class="font-extrabold text-slate-800">
+                            ابزار اندازه‌گیری
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 leading-7 mt-3">
+                            تجهیزات لازم برای اندازه‌گیری دقیق‌تر
+                        </p>
+                    </div>
+
+                    <div class="rounded-3xl bg-[#f5f7f9] p-6 mt-8">
+                        <div class="text-3xl mb-5">🏗️</div>
+                        <h3 class="font-extrabold text-slate-800">
+                            تجهیزات ساختمانی
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 leading-7 mt-3">
+                            محصولات کاربردی برای پروژه‌های ساختمانی
+                        </p>
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <div class="mx-auto w-16 h-16 rounded-full bg-softGreen grid place-items-center text-2xl">🌱</div>
-                    <h3 class="font-bold mt-4">رشد</h3>
-                    <p class="text-sm text-slate-500 mt-2 leading-7">به سوی آینده‌ای بهتر با کتاب.</p>
+        </section>
+
+
+        {{-- Why Diar Abzar --}}
+        <section id="why-diar" class="diar-bg py-16 sm:py-20">
+
+            <div class="container-x">
+
+                <div class="text-center mb-12">
+                    <h2 class="diar-line text-2xl sm:text-3xl font-bold text-slate-900">
+                        چرا دیار ابزار؟
+                    </h2>
+
+                    <p class="mt-6 text-sm sm:text-base text-slate-500 leading-8">
+                        تجربه خرید خوب از انتخاب درست شروع می‌شود.
+                        ما در تلاشیم این مسیر را برای شما ساده‌تر کنیم.
+                    </p>
                 </div>
-                <div class="text-center">
-                    <div class="mx-auto w-16 h-16 rounded-full bg-softGreen grid place-items-center text-2xl">🤝</div>
-                    <h3 class="font-bold mt-4">همراهی</h3>
-                    <p class="text-sm text-slate-500 mt-2 leading-7">در تمام مراحل کنار شما هستیم.</p>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+                    <article class="diar-card rounded-2xl bg-white border border-slate-100 p-7">
+
+                        <div class="diar-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl">
+                            🛡️
+                        </div>
+
+                        <h3 class="font-extrabold mt-5 text-slate-800">
+                            خرید مطمئن
+                        </h3>
+
+                        <p class="text-sm text-slate-500 leading-8 mt-3">
+                            تلاش می‌کنیم اطلاعات محصولات را به شکلی شفاف
+                            ارائه کنیم تا با اطمینان بیشتری خرید کنید.
+                        </p>
+
+                    </article>
+
+                    <article class="diar-card rounded-2xl bg-white border border-slate-100 p-7">
+
+                        <div class="diar-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl">
+                            🧰
+                        </div>
+
+                        <h3 class="font-extrabold mt-5 text-slate-800">
+                            تنوع ابزار
+                        </h3>
+
+                        <p class="text-sm text-slate-500 leading-8 mt-3">
+                            مجموعه‌ای از ابزارهای موردنیاز برای فعالیت‌های
+                            ساختمانی، صنعتی و فنی.
+                        </p>
+
+                    </article>
+
+                    <article class="diar-card rounded-2xl bg-white border border-slate-100 p-7">
+
+                        <div class="diar-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl">
+                            💬
+                        </div>
+
+                        <h3 class="font-extrabold mt-5 text-slate-800">
+                            راهنمایی مشتری
+                        </h3>
+
+                        <p class="text-sm text-slate-500 leading-8 mt-3">
+                            انتخاب ابزار مناسب اهمیت زیادی دارد؛
+                            برای پیدا کردن گزینه مناسب، همراه شما هستیم.
+                        </p>
+
+                    </article>
+
+                    <article class="diar-card rounded-2xl bg-white border border-slate-100 p-7">
+
+                        <div class="diar-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl">
+                            🛒
+                        </div>
+
+                        <h3 class="font-extrabold mt-5 text-slate-800">
+                            خرید آسان
+                        </h3>
+
+                        <p class="text-sm text-slate-500 leading-8 mt-3">
+                            می‌خواهیم فرایند بررسی محصولات و ثبت سفارش
+                            برای شما ساده و قابل‌دسترس باشد.
+                        </p>
+
+                    </article>
+
                 </div>
-                <div class="text-center">
-                    <div class="mx-auto w-16 h-16 rounded-full bg-softGreen grid place-items-center text-2xl">💡</div>
-                    <h3 class="font-bold mt-4">یادگیری</h3>
-                    <p class="text-sm text-slate-500 mt-2 leading-7">همیشه در حال یادگیری و بهتر شدنیم.</p>
-                </div>
-                <div class="text-center">
-                    <div class="mx-auto w-16 h-16 rounded-full bg-softGreen grid place-items-center text-2xl">♡</div>
-                    <h3 class="font-bold mt-4">اعتماد</h3>
-                    <p class="text-sm text-slate-500 mt-2 leading-7">اعتماد شما بزرگ‌ترین سرمایه ماست.</p>
-                </div>
+
             </div>
-        </div>
-    </section>
 
-    <!-- Stats -->
-    <section class="pb-16 sm:pb-20">
-        <div class="container-x">
-            <div class="rounded-3xl bg-[#f8f3e9] p-7 sm:p-10 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-                <div><strong class="block text-2xl sm:text-3xl text-brand">+۵۰,۰۰۰</strong><span class="text-sm text-slate-500 mt-2 block">عنوان کتاب</span></div>
-                <div><strong class="block text-2xl sm:text-3xl text-brand">+۱۰,۰۰۰</strong><span class="text-sm text-slate-500 mt-2 block">مشتری راضی</span></div>
-                <div><strong class="block text-2xl sm:text-3xl text-brand">۹۸٪</strong><span class="text-sm text-slate-500 mt-2 block">ارسال موفق</span></div>
-                <div><strong class="block text-2xl sm:text-3xl text-brand">۴.۸</strong><span class="text-sm text-slate-500 mt-2 block">رضایت مشتریان</span></div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA -->
-    <section id="contact" class="pb-16 sm:pb-20">
-        <div class="container-x">
-            <div class="rounded-[28px] bg-gradient-to-l from-[#eaf5e9] to-[#f8f2e7] p-8 sm:p-12 text-center">
-                <div class="text-4xl">📖</div>
-                <h2 class="mt-4 text-2xl sm:text-3xl font-extrabold">کتاب بعدی‌تان را پیدا کنید</h2>
-                <p class="mt-3 text-sm sm:text-base text-slate-600">یک کتاب خوب شاید شروع یک مسیر تازه باشد.</p>
-                <div class="mt-7 flex flex-wrap justify-center gap-3">
-                    <a href="#" class="px-7 py-3 rounded-xl bg-brand text-white font-semibold hover:bg-brandDark transition">مشاهده کتاب‌ها</a>
-                    <a href="mailto:info@ketabyar.ir" class="px-7 py-3 rounded-xl bg-white border border-slate-200 font-semibold hover:border-brand transition">ارتباط با ما</a>
+
+        {{-- Our Approach --}}
+        <section class="py-16 sm:py-20">
+
+            <div class="container-x">
+
+                <div class="rounded-[30px] overflow-hidden bg-[#071b49] text-white grid lg:grid-cols-2">
+
+                    <div class="p-8 sm:p-12 lg:p-14 flex flex-col justify-center">
+
+                        <span class="text-[#ed171f] font-bold text-sm">
+                            نگاه ما به آینده
+                        </span>
+
+                        <h2 class="text-2xl sm:text-3xl font-bold leading-relaxed mt-4">
+                            ساختن تجربه‌ای بهتر برای خرید ابزار
+                        </h2>
+
+                        <p class="mt-5 text-sm sm:text-base text-slate-300 leading-9">
+                            باور داریم یک فروشگاه تخصصی ابزار باید بیشتر
+                            از نمایش چند محصول باشد. مشتری باید بتواند
+                            محصول موردنیاز خود را پیدا کند، مشخصات آن را
+                            بررسی کند و با آگاهی تصمیم بگیرد.
+                        </p>
+
+                        <p class="mt-4 text-sm sm:text-base text-slate-300 leading-9">
+                            به همین دلیل، در دیار ابزار به دنبال ایجاد
+                            تجربه‌ای ساده، شفاف و قابل اعتماد هستیم؛
+                            تجربه‌ای که در آن نیاز مشتری در اولویت قرار دارد.
+                        </p>
+
+                        <a href="{{ url('/') }}"
+                           class="mt-7 self-start rounded-xl bg-[#ed171f] px-6 py-3 font-bold text-white hover:bg-red-700 transition">
+                            همراه ما باشید
+                        </a>
+
+                    </div>
+
+                    <div class="relative min-h-[300px] lg:min-h-[460px]">
+
+                        <img
+                            src="{{ asset('img/about.png') }}"
+                            alt="تجهیزات و ابزارآلات فنی"
+                            class="absolute inset-0 w-full h-full object-cover"
+                        >
+
+                        <div class="absolute inset-0 bg-gradient-to-l from-transparent to-[#071b49]/30"></div>
+
+                    </div>
+
                 </div>
+
             </div>
-        </div>
-    </section> --}}
-</main>
 
-<!-- Footer -->
+        </section>
 
+
+        {{-- Values --}}
+        <section class="diar-bg py-16 sm:py-20">
+
+            <div class="container-x">
+
+                <div class="text-center mb-12">
+
+                    <h2 class="diar-line text-2xl sm:text-3xl font-bold text-slate-900">
+                        ارزش‌هایی که به آن‌ها پایبندیم
+                    </h2>
+
+                    <p class="mt-6 text-sm text-slate-500">
+                        اصولی که مسیر فعالیت دیار ابزار را شکل می‌دهند.
+                    </p>
+
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+
+                    <div class="text-center">
+
+                        <div class="mx-auto w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl shadow-sm">
+                            🤝
+                        </div>
+
+                        <h3 class="font-extrabold mt-5">
+                            اعتماد
+                        </h3>
+
+                        <p class="text-sm text-slate-500 mt-3 leading-7">
+                            اعتماد مشتری، سرمایه اصلی یک کسب‌وکار است.
+                        </p>
+
+                    </div>
+
+                    <div class="text-center">
+
+                        <div class="mx-auto w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl shadow-sm">
+                            🎯
+                        </div>
+
+                        <h3 class="font-extrabold mt-5">
+                            دقت
+                        </h3>
+
+                        <p class="text-sm text-slate-500 mt-3 leading-7">
+                            توجه به نیاز مشتری و انتخاب درست محصولات.
+                        </p>
+
+                    </div>
+
+                    <div class="text-center">
+
+                        <div class="mx-auto w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl shadow-sm">
+                            💡
+                        </div>
+
+                        <h3 class="font-extrabold mt-5">
+                            یادگیری و پیشرفت
+                        </h3>
+
+                        <p class="text-sm text-slate-500 mt-3 leading-7">
+                            تلاش مستمر برای ارائه تجربه‌ای بهتر.
+                        </p>
+
+                    </div>
+
+                    <div class="text-center">
+
+                        <div class="mx-auto w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl shadow-sm">
+                            ❤️
+                        </div>
+
+                        <h3 class="font-extrabold mt-5">
+                            مشتری‌مداری
+                        </h3>
+
+                        <p class="text-sm text-slate-500 mt-3 leading-7">
+                            توجه به رضایت و نیاز واقعی خریداران.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        {{-- CTA --}}
+        <section class="py-16 sm:py-20">
+
+            <div class="container-x">
+
+                <div class="diar-cta rounded-[30px] p-8 sm:p-14 text-center relative overflow-hidden">
+
+                    <div class="absolute -top-20 -right-20 w-64 h-64 bg-[#ed171f]/10 rounded-full blur-3xl"></div>
+
+                    <div class="relative ">
+
+                        <div class="text-4xl mb-5">🔧</div>
+
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white leading-relaxed">
+                            برای شروع یک کار حرفه‌ای آماده‌اید؟
+                        </h2>
+
+                        <p class="mt-4 text-sm sm:text-base text-slate-300 leading-8 max-w-2xl mx-auto">
+                            ابزار مناسب خود را پیدا کنید و با انتخابی آگاهانه،
+                            کیفیت و دقت کارتان را افزایش دهید.
+                        </p>
+
+                        <div class="mt-8 flex flex-wrap justify-center gap-3">
+
+                            <a href="{{ url('/') }}"
+                               class="px-8 py-3.5 rounded-xl bg-[#ed171f] text-white font-bold hover:bg-red-700 transition">
+                                ورود به فروشگاه
+                            </a>
+
+                            <a href="#about"
+                               class="px-8 py-3.5 rounded-xl border border-white/20 text-white font-bold hover:bg-white/10 transition">
+                                بازگشت به بالا
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </div>
-{{-- <script>
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-</script> --}}
 
 @endsection
-

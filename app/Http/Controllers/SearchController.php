@@ -109,7 +109,7 @@ class SearchController extends Controller
 
         $products = $query->orderBy('created_at', "desc")->get();
         
-        $categories = category::all();
+        $categories = category::whereHas('products')->get();
         foreach ($products as $product) {
             if ($product->media->isNotEmpty()) {
                 foreach ($product->media as $media) {

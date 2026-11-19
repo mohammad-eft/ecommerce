@@ -48,9 +48,12 @@ Route::get('/test', function(){
     //     ]);
     // }
 
-    Schema::table('packs', function(Blueprint $table){
-        $table->string('count')->default(0)->after('image');
-    });
+    // Schema::table('packs', function(Blueprint $table){
+    //     $table->string('count')->default(0)->after('image');
+    // });
+
+    $test = product::count();
+    dd($test);
 });
 
 Route::get('/', [SettingController::class, 'home'])->name('home');
@@ -171,7 +174,7 @@ Route::group([
     'as'=>'search.'
 ], function(){
     // Route::post('/', 'search')->name('search');
-    Route::post('/', 'page')->name('page');
+    Route::get('/', 'page')->name('page');
 });
 
 Route::group([

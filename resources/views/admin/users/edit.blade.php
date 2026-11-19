@@ -1,5 +1,5 @@
 @extends('admin.app.dashboard')
-@section('title', 'طبابوک | ویرایش کاربر')
+@section('title', 'دیارابزار | ویرایش کاربر')
 @section('content')
     <div class="w-full">
         <div class="pb-5 w-full flex justify-center items-center">

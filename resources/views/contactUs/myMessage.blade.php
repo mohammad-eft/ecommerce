@@ -1,6 +1,6 @@
 
 @extends('app.document')
-@section('title', 'طبابوک | تیکت های من')
+@section('title', 'دیارابزار | تیکت های من')
 @section('content')
 <div class="w-11/12 lg:w-3/4 mx-auto flex flex-col pb-4">
     <div class="bg-white rounded-lg shadow-sm">

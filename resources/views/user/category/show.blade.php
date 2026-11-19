@@ -1,6 +1,6 @@
 @extends('app.document')
 @section('title')
-    طبابوک | {{ $category->title }}
+    دیارابزار | {{ $category->title }}
 @endsection
 @section('content')
     <div class="w-full">

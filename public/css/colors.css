@@ -1,24 +1,209 @@
-:root{
-    --primary-green: #8faf9d;
-    --dart-green: #66827a;
-    --pastel-pink: #ea9ca1;
-    --pastel-purple: #cfb4ea;
-    --pastel-blue: #add8f2;
-    --peach-color: #fab9a4;
-    --mint-color: #bbdfca;
-    --pastel-yellow: #f9d27f;
-    --beige-color: #ede0c9;
-    --cream-color: #f7f2e8;
-    --second-cream-color: #fbf6ef;
-    --primary-text-color: #4c6b62;
-    --secondary-text-color: #8c908e;
-    --discount-color: #ed8a9c;
-    --color-purple: #d6caed;
-    --light-green: #c0cfdb;
-    --green-btn: #95ADA2;
-    --light-green-btn: #b7ddc9;
-    --bg-dark-green: #819f92;
-    --purple-btn: #B4A0D4;
-    --color-border: #D5DFE4;
 
+/* =========================================================
+   DIAR ABZAR — CART DESIGN SYSTEM
+   Navy: #07145c
+   Red:  #e50914
+   Blue: #0877d1
+   ========================================================= */
+
+:root {
+    --primary-text-color: #07145c;
+    --secondary-text-color: #64748b;
+    --secondary-text: #64748b;
+
+    --green-btn: #07145c;
+    --light-green-btn: #e8edff;
+    --bg-dark-green: #07145c;
+
+    --cream-color: #f3f5fa;
+    --second-cream-color: #edf1f8;
+
+    --purple-btn: #0877d1;
+    --pastel-pink: #e50914;
+    --discount-color: #e50914;
+
+    --diar-navy: #07145c;
+    --diar-red: #e50914;
+    --diar-blue: #0877d1;
+    --diar-light: #f3f5fa;
+}
+
+/* =========================
+   CART ITEM
+========================= */
+
+.parentItem {
+    background: #ffffff !important;
+    border: 1px solid #e5eaf2 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 14px rgba(7, 20, 92, .05) !important;
+    transition: all .25s ease;
+}
+
+.parentItem:hover {
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 8px 22px rgba(7, 20, 92, .09) !important;
+}
+
+.parentItem h3 {
+    color: #07145c !important;
+}
+
+.parentItem p {
+    color: #64748b;
+}
+
+.parentItem .price {
+    color: #07145c !important;
+    font-weight: 800;
+}
+
+/* =========================
+   QUANTITY CONTROLS
+========================= */
+
+.parentItem .addToCartBtns,
+.parentItem .addPackToCartBtn {
+    background: #e8edff !important;
+    border: 1px solid #dbe4ff !important;
+    border-radius: 12px !important;
+    padding: 6px !important;
+    transition: all .2s ease;
+}
+
+.parentItem .addToCartBtns:hover,
+.parentItem .addPackToCartBtn:hover {
+    background: #edf1f8 !important;
+}
+
+.parentItem .addToCartBtns button,
+.parentItem .addPackToCartBtn button {
+    color: #07145c !important;
+    font-weight: 800;
+    border-radius: 8px;
+    transition: all .2s ease;
+}
+
+.parentItem .addToCartBtns button:hover:not(:disabled),
+.parentItem .addPackToCartBtn button:hover:not(:disabled) {
+    background: #07145c !important;
+    color: #ffffff !important;
+}
+
+.parentItem .addToCartBtns button:disabled,
+.parentItem .addPackToCartBtn button:disabled {
+    color: #94a3b8 !important;
+    opacity: .5;
+    cursor: not-allowed !important;
+}
+
+.parentItem .addToCartBtns input,
+.parentItem .addPackToCartBtn input {
+    background: transparent !important;
+    color: #07145c !important;
+    font-weight: 800;
+}
+
+/* =========================
+   ADD TO CART BUTTONS
+========================= */
+
+.addToCartBtns > button,
+.addPackToCartBtn > button {
+    background: #07145c !important;
+    color: #ffffff !important;
+    border: 1px solid #07145c !important;
+    border-radius: 12px !important;
+    transition: all .25s ease;
+    box-shadow: 0 4px 12px rgba(7, 20, 92, .12);
+}
+
+.addToCartBtns > button:hover,
+.addPackToCartBtn > button:hover {
+    background: #0877d1 !important;
+    border-color: #0877d1 !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px rgba(8, 119, 209, .2);
+}
+
+.addToCartBtns > button svg,
+.addPackToCartBtn > button svg {
+    fill: #ffffff !important;
+}
+
+.addToCartBtns > button span,
+.addPackToCartBtn > button span {
+    color: #ffffff !important;
+}
+
+/* =========================
+   CART POPUP
+========================= */
+
+.parentHeaderCarts {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.parentHeaderCarts::-webkit-scrollbar {
+    width: 5px;
+}
+
+.parentHeaderCarts::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+/* =========================
+   EMPTY CART
+========================= */
+
+.parentHeaderCarts > div:has(h2) {
+    background: #f8faff !important;
+    border: 1px dashed #cbd5e1 !important;
+    border-radius: 16px !important;
+}
+
+.parentHeaderCarts > div:has(h2) h2 {
+    color: #64748b !important;
+}
+
+/* =========================
+   LOADING SPINNER
+========================= */
+
+.addToCartBtns .animate-spin,
+.addPackToCartBtn .animate-spin {
+    border-color: rgba(255, 255, 255, .35) !important;
+    border-top-color: #ffffff !important;
+}
+
+/* =========================
+   CART LINK
+========================= */
+
+#cartLink {
+    transition: all .2s ease;
+}
+
+#cartLink:hover {
+    color: #0877d1;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 640px) {
+    .parentItem {
+        padding: 10px !important;
+        gap: 10px !important;
+        border-radius: 13px !important;
+    }
+
+    .parentItem .addToCartBtns,
+    .parentItem .addPackToCartBtn {
+        padding: 5px !important;
+    }
 }

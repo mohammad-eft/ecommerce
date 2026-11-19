@@ -1,6 +1,6 @@
 @extends('app.document')
 @section('title')
-    طبابوک | {{ $pack->title }}
+    دیارابزار | {{ $pack->title }}
 @endsection
 @section('content')
     <style>

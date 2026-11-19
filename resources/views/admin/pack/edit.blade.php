@@ -1,7 +1,7 @@
 @extends('admin.app.dashboard')
 
 @section('title')
-    طبابوک | ویرایش پک {{ $pack->title }}
+    دیارابزار | ویرایش پک {{ $pack->title }}
 @endsection
 
 @section('content')

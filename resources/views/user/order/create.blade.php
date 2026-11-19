@@ -1,6 +1,6 @@
 @extends('app.document')
 @section('title')
-    طبابوک | ثبت سفارش
+    دیارابزار | ثبت سفارش
 @endsection
 @section('content')
 

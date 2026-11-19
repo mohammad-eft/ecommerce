@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ url('css/MultiSelect.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ url('css/jodit.css') }}" type="text/css">
     <title>@yield('title')</title>
-    <link rel="shortcut icon" href="{{ asset('img/faveicon.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('icon/faveicon.png') }}" type="image/x-icon">
     <script src="{{ asset('js/tailwind.js') }}"></script>
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('js/jodit.js') }}"></script>

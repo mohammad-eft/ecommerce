@@ -13,7 +13,7 @@ class CategoryController extends Controller
 {
     public function create()
     {
-        $categories = category::select('id', 'title')->get();
+        $categories = category::all();
         // $logo = logo::first();
         $setting = homeSetting::document();
         return view('admin.category.create', [

@@ -1,5 +1,5 @@
 {{-- @extends('admin.app.dashboard')
-@section('title', 'طبابوک | ارتباط با ما')
+@section('title', 'دیارابزار | ارتباط با ما')
 @section('content')
     <div class="pt-3 mt-4 lg:mt-8">
         <div class="bg-white rounded-md lg:p-5 p-2 mb-3 lg:mb-5">
@@ -37,7 +37,7 @@
     </div>
 @endsection --}}
 @extends('admin.app.dashboard')
-@section('title', 'طبابوک | جزئیات پیام')
+@section('title', 'دیارابزار | جزئیات پیام')
 @section('content')
 <div class="pt-3 mt-4 lg:mt-8">
     <div class="bg-white rounded-md lg:p-5 p-3 mb-3 lg:mb-5

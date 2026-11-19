@@ -1,6 +1,6 @@
 @extends('admin.app.dashboard')
 @section('title')
-    طبابوک | ایجاد پک
+    دیارابزار | ایجاد پک
 @endsection
 @section('content')
     <style>

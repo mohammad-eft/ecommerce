@@ -1,5 +1,5 @@
 @extends('admin.app.dashboard')
-@section('title', 'طبابوک | تنظیمات بنر')
+@section('title', 'دیارابزار | تنظیمات بنر')
 @section('content')
 <div class="max-w-4xl mx-auto">
 

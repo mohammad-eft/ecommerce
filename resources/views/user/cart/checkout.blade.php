@@ -1,5 +1,5 @@
 @extends('app.document')
-@section('title', 'طبابوک | پرداخت')
+@section('title', 'دیارابزار | پرداخت')
 @section('content')
     <style>
         .card-glow {
@@ -117,7 +117,9 @@
                 @if (!Auth::check())
                     <div class="parentPass">
                         <label class="block text-sm font-medium mb-2"> رمز عبور <span class="text-red-500">*</span></label>
-                        <input type="password" name="password" placeholder="رمز عبور خود را وارد کنید " disabled id="password" class="in-fa w-full bg-gray-100 border-none rounded-lg p-3 focus:ring-2 focus:ring-(--bg-dark-green) outline-none">
+                        <input type="password" name="password" placeholder="رمز عبور خود را وارد کنید " disabled
+                            id="password"
+                            class="in-fa w-full bg-gray-100 border-none rounded-lg p-3 focus:ring-2 focus:ring-(--bg-dark-green) outline-none">
                     </div>
                 @endif
 
@@ -142,7 +144,7 @@
                         placeholder="یادداشت‌ها درباره سفارش شما، برای مثال نکات مهم درباره نحوه تحویل سفارش."
                         class="in-fa w-full bg-gray-100 border-none rounded-lg p-3 focus:ring-2 focus:ring-(--bg-dark-green) outline-none resize-none"></textarea>
                 </div>
-                
+
             </div>
         </div>
 
@@ -159,21 +161,7 @@
 
                     <div id="parentCheckout"></div>
 
-                    {{-- <div class="p-3 border-b border-gray-200 text-sm">
-                        <div class="flex justify-between mb-2">
-                            <span class="font-bold">مرسوله</span>
-                        </div>
-                        <div class="space-y-2 text-gray-600">
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="radio" name="onlinePayment" value="0" class="text-blue-600 focus:ring-(--bg-dark-green)" checked>
-                                <span>پرداخت درب منزل</span>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="radio" name="onlinePayment" value="1" class="text-blue-600 focus:ring-(--bg-dark-green)">
-                                <span>پرداخت آنلاین</span>
-                            </label>
-                        </div>
-                    </div> --}}
+
 
                     <div class="flex justify-between p-3 border-b border-gray-200 text-sm font-bold">
                         <span>مجموع</span>
@@ -185,12 +173,46 @@
                         <span class="text-(--discount-color)" id="totalDiscountCheckout">0</span>
                     </div>
                 </div>
+
+
+                <div class="mb-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                    <div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                d="M12 9v3.5m0 3h.01M10.3 3.8 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z" />
+                        </svg>
+                    </div>
+
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold text-amber-800">
+                            نیاز به استعلام قیمت دارید؟
+                        </p>
+
+                        <p class="mt-1 text-xs leading-6 text-amber-700">
+                            برای اطلاع از قیمت محصولاتی که قیمت آن‌ها در سایت درج نشده است،
+                            لطفاً با شماره زیر تماس بگیرید.
+                        </p>
+
+                        <a href="tel:09142302912"
+                            class="mt-2 inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-bold text-[#010348] border border-amber-200 transition hover:bg-amber-100 in-fa"
+                            dir="ltr">
+                            09142302912
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                    d="M3 5a2 2 0 0 1 2-2h2.2a1 1 0 0 1 .95.68l1.1 3.3a1 1 0 0 1-.5 1.2l-1.6.8a11 11 0 0 0 4.9 4.9l.8-1.6a1 1 0 0 1 1.2-.5l3.3 1.1a1 1 0 0 1 .68.95V16a2 2 0 0 1-2 2A15 15 0 0 1 3 5Z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <div class="w-full max-w-[340px] sm:max-w-[380px] md:max-w-[420px] transition-all duration-300 mb-5">
                         <div
                             class="relative w-full rounded-2xl bg-gradient-to-br from-indigo-800 via-indigo-700 to-purple-800 p-5 sm:p-6 text-white shadow-2xl card-glow overflow-hidden transition hover:shadow-indigo-500/30 duration-300">
 
-                        
+
 
                             <!-- محتوای کارت -->
                             <div class="relative z-10 h-full flex flex-col justify-between">
@@ -202,11 +224,11 @@
                                         <div
                                             class="size-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
                                             <span class="text-sm font-bold text-white/90">
-                                                <img src="{{ asset('img/bank.png') }}" class="size-10 rounded-full" alt="">
+                                                <img src="{{ asset('img/meli.png') }}" class="size-10 rounded-full"
+                                                    alt="">
                                             </span>
                                         </div>
-                                        <span class="text-sm font-semibold tracking-wide text-white/90">بانک مهر
-                                            ایران</span>
+                                        <span class="text-sm font-semibold tracking-wide text-white/90">بانک ملی</span>
                                     </div>
                                     <div
                                         class="w-10 h-8 rounded-md bg-gradient-to-br from-amber-200 to-amber-400/80 border border-amber-300/50 shadow-inner flex items-center justify-center">
@@ -221,6 +243,8 @@
                                     </div>
                                 </div>
 
+
+
                                 <!-- شماره کارت -->
                                 <div class="w-full flex items-end justify-between">
                                     <div class="mt-3 sm:mt-4">
@@ -229,12 +253,31 @@
                                             کارت</p>
                                         <div
                                             class="card-number text-base sm:text-lg md:text-xl font-medium text-white/95 drop-shadow-sm">
-                                            6063 7311 2068 4353
+                                            6037 9975 8022 0607
                                         </div>
                                     </div>
-                                    <svg class="w-6 h-6 cursor-pointer text-white" onclick="copyText('6063 7311 2068 4353')" aria-hidden="true"
+                                    <svg class="w-6 h-6 cursor-pointer text-white"
+                                        onclick="copyText('6063 7311 2068 4353')" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                         viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 8v3a1 1 0 0 1-1 1H5m11 4h2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-7a1 1 0 0 0-1 1v1m4 3v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L7.7 8.35A1 1 0 0 1 8.46 8H13a1 1 0 0 1 1 1Z" />
+                                    </svg>
+
+                                </div>
+                                <div class="w-full flex items-end justify-between">
+                                    <div class="mt-3 sm:mt-4">
+                                        <p class="text-[10px] sm:text-xs text-white/60 uppercase tracking-wider mb-0.5">
+                                            شماره
+                                            حساب</p>
+                                        <div
+                                            class="card-number text-base sm:text-lg md:text-xl font-medium text-white/95 drop-shadow-sm">
+                                            0110847606002
+                                        </div>
+                                    </div>
+                                    <svg class="w-6 h-6 cursor-pointer text-white" onclick="copyText('0110847606002')"
+                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
                                             d="M9 8v3a1 1 0 0 1-1 1H5m11 4h2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-7a1 1 0 0 0-1 1v1m4 3v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L7.7 8.35A1 1 0 0 1 8.46 8H13a1 1 0 0 1 1 1Z" />
                                     </svg>
@@ -250,10 +293,11 @@
                                         <div
                                             class="sheba-number flex items-center gap-1 text-[11px] sm:text-sm md:text-base font-medium text-white/95">
                                             <span class="text-white/70 font-sans">IR</span>
-                                            <span class="text-sm">67 0600 2002 7001 1408 8140 01</span>
+                                            <span class="text-sm">45 0170 0000 0011 0847 6060 02</span>
                                         </div>
                                     </div>
-                                    <svg class="w-6 h-6 cursor-pointer text-white" onclick="copyText('67 0600 2002 7001 1408 8140 01')" aria-hidden="true"
+                                    <svg class="w-6 h-6 cursor-pointer text-white"
+                                        onclick="copyText('450170000000110847606002')" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                         viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
@@ -267,14 +311,15 @@
                                     <div>
                                         <p class="text-[9px] sm:text-[10px] text-white/50 uppercase tracking-wider">به نام
                                         </p>
-                                        <p class="text-sm sm:text-base font-medium text-white/90 tracking-wide">عباس ملکی
+                                        <p class="text-sm sm:text-base font-medium text-white/90 tracking-wide">امیر
+                                            سلمانزاده اسبق
                                         </p>
                                     </div>
-                                    <div class="text-left">
+                                    {{-- <div class="text-left">
                                         <p class="text-[9px] sm:text-[10px] text-white/50 uppercase tracking-wider">تاریخ
                                             انقضا</p>
                                         <p class="text-sm sm:text-base font-medium text-white/90 tracking-wider">۱۲/۲۸</p>
-                                    </div>
+                                    </div> --}}
                                     <div class="flex items-center gap-1 opacity-80">
                                         <div
                                             class="w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/20">

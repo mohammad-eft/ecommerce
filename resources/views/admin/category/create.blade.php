@@ -1,5 +1,5 @@
 @extends('admin.app.dashboard')
-@section('title', 'طبابوک | ایجاد دسته')
+@section('title', 'دیارابزار | ایجاد دسته')
 @section('content')
 @if (session('message'))
 <div
@@ -32,13 +32,16 @@
             </div>
             <div class="flex flex-col-reverse md:flex-row gap-5 md:gap-10 mt-5">
                 <div class="md:w-1/2 flex flex-col">
+                
                     <label for="parent_id">دسته بندی :</label>
                     <select name="parent_id" id="parent_id" class="md:w-1/2 bg-[#F9F9F9] py-3 pr-5 rounded-[10px]">
                         <option value="0">بدون والد</option>
                         @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" @if (old('parent_id')==$category->id) selected @endif>
-                            {{ $category->title }}
-                        </option>
+                            @if($category->parent_id == 0)
+                                <option value="{{ $category->id }}" @if (old('parent_id')==$category->id) selected @endif>
+                                    {{ $category->title }}
+                                </option>
+                            @endif
                         @endforeach
                     </select>
                 </div>

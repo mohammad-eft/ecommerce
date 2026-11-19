@@ -1,7 +1,7 @@
 
 @include('app.header')
 
-<div id="main" class="transition-all duration-300 mt-20">
+<div id="main" class="transition-all duration-300 mt-20 lg:mt-0">
     @yield('content')
 </div>
     
